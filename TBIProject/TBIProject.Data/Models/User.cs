@@ -10,7 +10,8 @@ namespace TBIProject.Data.Models
         public string FullName { get; set; }
 
         public string EGN { get; set; }
-
+        public List<Application> Applicatons { get; set; }
+       
         public ICollection<Loan> Loans { get; set; }
     }
 }

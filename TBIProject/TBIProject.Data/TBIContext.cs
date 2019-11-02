@@ -23,6 +23,10 @@ namespace TBIProject.Data
                 .HasMany(u => u.Loans)
                 .WithOne(l => l.User)
                 .HasForeignKey(u => u.UserId);
+            builder.Entity<User>()
+                .HasMany(a => a.Applicatons)
+                .WithOne(u => u.CurrentlyOpenedBy)
+                .HasForeignKey(h => h.OperatorId);
         }
     }
 }

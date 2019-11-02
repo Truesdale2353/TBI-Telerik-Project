@@ -9,6 +9,9 @@ namespace TBIProject.Data.Models
     public class Application
     {
         public int Id { get; set; }
+        public string OperatorId { get; set; }
+
+        public User CurrentlyOpenedBy { get; set; }
 
         public ApplicationStatus ApplicationStatus { get; set; }
 
