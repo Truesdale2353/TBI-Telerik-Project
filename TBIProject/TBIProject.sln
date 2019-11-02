@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBIProject", "TBIProject\TBIProject.csproj", "{4AC2310E-A9ED-4407-9307-F27AC4028B33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBIProject.Data", "TBIProject.Data\TBIProject.Data.csproj", "{C083CC62-5870-4E50-8A17-41EBE7B9F03C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4AC2310E-A9ED-4407-9307-F27AC4028B33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AC2310E-A9ED-4407-9307-F27AC4028B33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AC2310E-A9ED-4407-9307-F27AC4028B33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AC2310E-A9ED-4407-9307-F27AC4028B33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C083CC62-5870-4E50-8A17-41EBE7B9F03C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C083CC62-5870-4E50-8A17-41EBE7B9F03C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C083CC62-5870-4E50-8A17-41EBE7B9F03C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C083CC62-5870-4E50-8A17-41EBE7B9F03C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D937DFF-059B-4DF0-9FEC-AED261945714}
+	EndGlobalSection
+EndGlobal
