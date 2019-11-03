@@ -1,0 +1,17 @@
+﻿@model EmailListModel
+@{
+    ViewData["Title"] = "BrowseEmails";
+}
+
+<h1>BrowseEmails</h1>
+
+@{ 
+    foreach (var email in Model.emailList)
+    {
+        <p> email ID:@email.EmailId</p>
+        <p> email ID:@email.Emailreceived</p>
+        <p> email ID:@email.EmailSender</p>
+        <p> email ID:@email.EmailStatus</p>
+        
+    }
+}
