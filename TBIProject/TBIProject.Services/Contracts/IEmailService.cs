@@ -10,7 +10,9 @@ namespace TBIProject.Services.Contracts
     {
         Task<IEnumerable<Message>> GetMessagesAsync(string email);
 
-        Task<Message> GetMessageAsync(string email, string messageId);
+        Task<Message> GetMessageAsync(string messageId, string email);
+
+        Task<IEnumerable<Message>> GetMessagesAsync(string query, string email);
 
         Task<Message> ModifyMessageAsync(string messageId, IList<string> labelsToAdd, IList<string> labelsToRemove, string email);
 

@@ -11,28 +11,27 @@ namespace TBIProject.Services.Implementation
     public class TBIEmailService : IEmailService
     {
         private readonly GmailService emailService;
-        private const string emailAddress = "telerik.tbi@gmail.com";
 
         public TBIEmailService(GmailService emailService)
         {
             this.emailService = emailService;
         }
 
-        public async Task<IEnumerable<Message>> GetMessagesAsync(string email = emailAddress)
+        public async Task<IEnumerable<Message>> GetMessagesAsync(string email)
         {
             var messages = await this.emailService.Users.Messages.List(email).ExecuteAsync();
 
             return messages.Messages;
         }
 
-        public async Task<Message> GetMessageAsync(string messageId, string email = emailAddress)
+        public async Task<Message> GetMessageAsync(string messageId, string email)
         {
             var message = await this.emailService.Users.Messages.Get(email, messageId).ExecuteAsync();
 
             return message;
         }
 
-        public async Task<Message> ModifyMessageAsync(string messageId, IList<string> labelsToAdd, IList<string> labelsToRemove, string email = emailAddress)
+        public async Task<Message> ModifyMessageAsync(string messageId, IList<string> labelsToAdd, IList<string> labelsToRemove, string email)
         {
             var mods = new ModifyMessageRequest();
             mods.AddLabelIds = labelsToAdd;
@@ -57,6 +56,29 @@ namespace TBIProject.Services.Implementation
             var resultMessage = Encoding.UTF8.GetString(base64Message);
 
             return resultMessage;
+        }
+
+        public async Task<IEnumerable<Message>> GetMessagesAsync(string query, string email)
+        {
+            List<Message> result = new List<Message>();
+            UsersResource.MessagesResource.ListRequest request = this.emailService.Users.Messages.List(email);
+            request.Q = query;
+
+            do
+            {
+                try
+                {
+                    ListMessagesResponse response = await request.ExecuteAsync();
+                    result.AddRange(response.Messages);
+                    request.PageToken = response.NextPageToken;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("An error occurred: " + e.Message);
+                }
+            } while (!String.IsNullOrEmpty(request.PageToken));
+
+            return result;
         }
     }
 }
