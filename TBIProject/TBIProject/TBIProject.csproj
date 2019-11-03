@@ -8,6 +8,7 @@
 
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.41.1.1635" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
@@ -16,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TBIProject.Data\TBIProject.Data.csproj" />
+    <ProjectReference Include="..\TBIProject.Services\TBIProject.Services.csproj" />
   </ItemGroup>
 
 </Project>

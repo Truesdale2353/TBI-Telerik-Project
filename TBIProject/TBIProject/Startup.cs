@@ -15,6 +15,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TBIProject.Data.Models;
 using TBIProject.Infrastructure.Extensions;
+using Google.Apis.Gmail.v1;
+using TBIProject.Services.Contracts;
+using Google.Apis.Services;
+using TBIProject.Services.Implementation;
 
 namespace TBIProject
 {
@@ -50,6 +54,14 @@ namespace TBIProject
                 .AddRoles<IdentityRole>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<TBIContext>();
+
+            services.AddSingleton<GmailService>(u => new GmailService(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = services.GetGooleUserCredentials(),
+                ApplicationName = "Quickstart",
+            }));
+
+            services.AddTransient<IEmailService, TBIEmailService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
