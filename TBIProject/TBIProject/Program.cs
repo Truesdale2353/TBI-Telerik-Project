@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using TBIProject.Infrastructure.HostedServices;
 
 namespace TBIProject
 {
@@ -19,6 +21,9 @@ namespace TBIProject
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>().ConfigureServices(services =>
+                {
+                    services.AddHostedService<EmailFetchingHostedService>();
+                });
     }
 }
