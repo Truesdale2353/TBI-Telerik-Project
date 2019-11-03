@@ -22,6 +22,7 @@ namespace TBIProject.Controllers
         }
         public async Task<IActionResult> BrowseEmails(int filter)
         {
+
             var emails = await service.ListEmails(filter);
             var applications = emails.Select(e => new EmailViewModel
             {

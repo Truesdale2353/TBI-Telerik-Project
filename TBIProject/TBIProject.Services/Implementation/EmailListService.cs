@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TBIProject.Data;
+using TBIProject.Data.Models;
+using TBIProject.Data.Models.Enums;
 using TBIProject.Services.Contracts;
 using TBIProject.Services.Models;
 
@@ -18,10 +20,19 @@ namespace TBIProject.Services.Implementation
         }
         public async Task<List<EmailServiceModel>> ListEmails(int filter)
         {
-            var emailList = context.Applications.ToList();
+            var app = new List<Application>();
+            if (filter!=0)
+            {
+            app = context.Applications.Where(f=>f.ApplicationStatus==(ApplicationStatus)filter).ToList();
+            }
+            else
+            {
+                app = context.Applications.ToList();
+            }
+                
 
 
-            var applications = emailList.Select(b => new EmailServiceModel
+            var applications = app.Select(b => new EmailServiceModel
             {
                 EmailId = b.Id,
                 Emailreceived = b.Received,
