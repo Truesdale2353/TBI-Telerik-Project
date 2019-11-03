@@ -7,5 +7,7 @@ namespace TBIProject.Services.Contracts
     public interface IEmailListService
     {
         Task<List<EmailServiceModel>> ListEmails(int filter);
+
+        Task AddNewlyReceivedMessage(string gmailId, string body);
     }
 }

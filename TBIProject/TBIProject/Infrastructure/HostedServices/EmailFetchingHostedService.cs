@@ -1,4 +1,5 @@
 ﻿using Google.Apis.Gmail.v1.Data;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,13 @@ namespace TBIProject.Infrastructure.HostedServices
     public class EmailFetchingHostedService : IHostedService, IDisposable
     {
         private readonly IEmailService service;
+        private readonly IServiceScopeFactory scopeFactory;
         private Timer timer;
 
-        public EmailFetchingHostedService(IEmailService service)
+        public EmailFetchingHostedService(IEmailService service, IServiceScopeFactory scopeFactory)
         {
             this.service = service;
+            this.scopeFactory = scopeFactory;
         }
 
         public void Dispose()
@@ -43,7 +46,24 @@ namespace TBIProject.Infrastructure.HostedServices
         {
             var messages =  this.GetNewMessagesAsync().GetAwaiter().GetResult();
 
-            if (messages.Count > 0) Console.WriteLine("JUICY MASSAGES");
+            if (messages.Count > 0)
+            {
+                using (var scope = this.scopeFactory.CreateScope())
+                {
+                    var emailListService = scope.ServiceProvider.GetRequiredService<IEmailListService>();
+                    foreach (var messageData in messages)
+                    {
+                        var message = this.service.GetMessageAsync(messageData.Id, EmailConstants.EMAIL_ADDRESS).GetAwaiter().GetResult();
+
+                        var body = this.service.GetMessageBodyAsync(message).GetAwaiter().GetResult();
+
+                        emailListService.AddNewlyReceivedMessage(message.Id, body);
+
+                        this.service.ModifyMessageAsync(message.Id, null, new List<string> { "UNREAD" }, EmailConstants.EMAIL_ADDRESS);
+                    }
+                }
+               
+            }
         }
 
         private async Task<ICollection<Message>> GetNewMessagesAsync()

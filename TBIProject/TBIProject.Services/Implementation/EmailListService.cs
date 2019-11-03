@@ -13,7 +13,7 @@ namespace TBIProject.Services.Implementation
 {
     public class EmailListService : IEmailListService
     {
-        private TBIContext context { get; }
+        private readonly TBIContext context;
         public EmailListService(TBIContext context)
         {
             this.context = context;
@@ -42,6 +42,21 @@ namespace TBIProject.Services.Implementation
 
             });
             return applications.ToList();
+        }
+
+        public async Task AddNewlyReceivedMessage(string gmailId, string body)
+        {
+            var app = new Application
+            {
+                GmailId = gmailId,
+                Body = body,
+                Received = DateTime.UtcNow,
+                ApplicationStatus = ApplicationStatus.NotReviewed
+            };
+
+            await this.context.Applications.AddAsync(app);
+
+            await this.context.SaveChangesAsync();
         }
     }
 }

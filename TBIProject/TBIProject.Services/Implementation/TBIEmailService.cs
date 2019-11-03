@@ -51,7 +51,7 @@ namespace TBIProject.Services.Implementation
 
         public async Task<string> GetMessageBodyAsync(Message message)
         {
-            var base64Message = Convert.FromBase64String(message.Payload.Parts[1].Body.Data.Replace("-", "+").Replace("_", "/"));
+            var base64Message = Convert.FromBase64String(message.Payload.Parts[0].Body.Data.Replace("-", "+").Replace("_", "/"));
 
             var resultMessage = Encoding.UTF8.GetString(base64Message);
 
