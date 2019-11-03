@@ -4,31 +4,23 @@
 }
 
 <h1>BrowseEmails</h1>
-<a class="btn btn-primary"
-   href="@Url.Action("BrowseEmails", "ListEmails", new { filter=0 })">List all</a>
-<a class="btn btn-primary"
-   href="@Url.Action("BrowseEmails", "ListEmails", new { filter=1 })"> List Not Reviewed</a>
-<a class="btn btn-primary"
-   href="@Url.Action("BrowseEmails", "ListEmails", new { filter = 2 })">List Invalid Application</a>
-<a class="btn btn-primary"
-   href="@Url.Action("BrowseEmails", "ListEmails", new { filter = 3 })">List New</a>
-<a class="btn btn-primary"
-   href="@Url.Action("BrowseEmails", "ListEmails", new { filter = 4 })">List Open</a>
-<a class="btn btn-primary"
-   href="@Url.Action("BrowseEmails", "ListEmails", new { filter = 5 })">List Closed</a>
+<a class="btn btn-primary" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="0"> List all</a>
+<a class="btn btn-primary" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="1"> List Not Reviewed</a>
+<a class="btn btn-primary" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="2">List Invalid Application</a>
+<a class="btn btn-primary" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="3">List New</a>
+<a class="btn btn-primary" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="4">List Open</a>
+<a class="btn btn-primary" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="5">List Closed</a>
+
 <br />
 <br />
 @{
     foreach (var email in Model.emailList)
     {
-        <a class="btn btn-primary"
-           href="@Url.Action("GetEmailInfo", "EmailInfo", new { emailId=@email.EmailId})">
-            email ID:@email.EmailId , send by @email.EmailSender is received on @email.Emailreceived and is currently @email.EmailStatus
+        <a class="btn btn-primary" asp-controller="EmailInfo" asp-action="GetEmailInfo" asp-route-emailId="@email.EmailId">
+            email ID:@email.EmailId , sent by @email.EmailSender is received on @email.Emailreceived and is currently @email.EmailStatus
         </a>
         <br />
         <br />
-
-
 
     }
 }
