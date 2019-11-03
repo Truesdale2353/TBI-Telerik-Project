@@ -65,6 +65,7 @@ namespace TBIProject
             services.AddTransient<IEmailService, TBIEmailService>();
             services.AddTransient<IEmailListService, EmailListService>();
             services.AddTransient<IEncrypter, Encrypter>();
+            services.AddTransient<IEmailProcessingService, EmailProcessingService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

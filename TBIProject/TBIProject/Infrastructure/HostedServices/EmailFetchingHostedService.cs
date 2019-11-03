@@ -68,7 +68,7 @@ namespace TBIProject.Infrastructure.HostedServices
 
         private async Task<ICollection<Message>> GetNewMessagesAsync()
         {
-            var messages = await this.service.GetMessagesAsync("is:unread", EmailConstants.EMAIL_ADDRESS);
+            var messages = await this.service.GetMessagesAsync("is:unread",EmailConstants.EMAIL_ADDRESS);
 
             return messages.ToList();
         }

@@ -26,6 +26,7 @@ namespace TBIProject.Services.Implementation
         public async Task<List<EmailServiceModel>> ListEmails(int filter)
         {
             var app = new List<Application>();
+
             if (filter!=0)
             {
             app = context.Applications.Where(f=>f.ApplicationStatus==(ApplicationStatus)filter).ToList();
@@ -33,9 +34,7 @@ namespace TBIProject.Services.Implementation
             else
             {
                 app = context.Applications.ToList();
-            }
-                
-
+            }               
 
             var applications = app.Select(b => new EmailServiceModel
             {
@@ -43,7 +42,7 @@ namespace TBIProject.Services.Implementation
                 Emailreceived = b.Received,
                 EmailSender = b.Email,
                 EmailStatus = b.ApplicationStatus,
-                OperatorId = b.OperatorId
+               
 
             });
             return applications.ToList();
