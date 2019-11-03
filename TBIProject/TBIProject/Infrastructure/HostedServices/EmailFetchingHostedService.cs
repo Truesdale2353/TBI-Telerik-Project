@@ -57,7 +57,9 @@ namespace TBIProject.Infrastructure.HostedServices
 
                         var body = this.service.GetMessageBodyAsync(message).GetAwaiter().GetResult();
 
-                        emailListService.AddNewlyReceivedMessage(message.Id, body);
+                        var senderEmail = this.service.GetMessageEmailSenderAsync(message).GetAwaiter().GetResult();
+
+                        emailListService.AddNewlyReceivedMessage(message.Id, body, senderEmail);
 
                         this.service.ModifyMessageAsync(message.Id, null, new List<string> { "UNREAD" }, EmailConstants.EMAIL_ADDRESS);
                     }

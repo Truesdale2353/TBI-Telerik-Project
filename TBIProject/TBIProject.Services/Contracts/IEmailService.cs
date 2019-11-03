@@ -17,5 +17,7 @@ namespace TBIProject.Services.Contracts
         Task<Message> ModifyMessageAsync(string messageId, IList<string> labelsToAdd, IList<string> labelsToRemove, string email);
 
         Task<string> GetMessageBodyAsync(Message message);
+
+        Task<string> GetMessageEmailSenderAsync(Message message);
     }
 }
