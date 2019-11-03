@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TBIProject", "TBIProject\TB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TBIProject.Data", "TBIProject.Data\TBIProject.Data.csproj", "{C083CC62-5870-4E50-8A17-41EBE7B9F03C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBIProject.Service", "TBIProject.Service\TBIProject.Service.csproj", "{B238B9F1-C9B0-44C7-B85A-30BD911BF6C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBIProject.Services", "TBIProject.Services\TBIProject.Services.csproj", "{8288B9A1-57ED-405C-A550-FD956CF4C959}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{C083CC62-5870-4E50-8A17-41EBE7B9F03C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C083CC62-5870-4E50-8A17-41EBE7B9F03C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C083CC62-5870-4E50-8A17-41EBE7B9F03C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B238B9F1-C9B0-44C7-B85A-30BD911BF6C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B238B9F1-C9B0-44C7-B85A-30BD911BF6C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B238B9F1-C9B0-44C7-B85A-30BD911BF6C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B238B9F1-C9B0-44C7-B85A-30BD911BF6C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8288B9A1-57ED-405C-A550-FD956CF4C959}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8288B9A1-57ED-405C-A550-FD956CF4C959}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8288B9A1-57ED-405C-A550-FD956CF4C959}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8288B9A1-57ED-405C-A550-FD956CF4C959}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
