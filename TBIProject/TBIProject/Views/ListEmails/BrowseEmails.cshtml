@@ -4,7 +4,9 @@
 }
 
 <h1>BrowseEmails</h1>
-
+<a class="btn btn-primary"
+   href="@Url.Action("BrowseEmails", "ListEmails",
+        new { filter=1 })">Not Reviewed</a>
 @{ 
     foreach (var email in Model.emailList)
     {
