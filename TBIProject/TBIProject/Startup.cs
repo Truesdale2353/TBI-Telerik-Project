@@ -19,6 +19,7 @@ using Google.Apis.Gmail.v1;
 using TBIProject.Services.Contracts;
 using Google.Apis.Services;
 using TBIProject.Services.Implementation;
+using TBIProject.Services.Providers.Encryption;
 
 namespace TBIProject
 {
@@ -63,6 +64,7 @@ namespace TBIProject
 
             services.AddTransient<IEmailService, TBIEmailService>();
             services.AddTransient<IEmailListService, EmailListService>();
+            services.AddTransient<IEncrypter, Encrypter>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
