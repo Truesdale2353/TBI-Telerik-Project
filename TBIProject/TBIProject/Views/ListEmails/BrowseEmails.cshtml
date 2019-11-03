@@ -16,13 +16,19 @@
    href="@Url.Action("BrowseEmails", "ListEmails", new { filter = 4 })">List Open</a>
 <a class="btn btn-primary"
    href="@Url.Action("BrowseEmails", "ListEmails", new { filter = 5 })">List Closed</a>
+<br />
+<br />
 @{
     foreach (var email in Model.emailList)
     {
-        <p> email ID:@email.EmailId</p>
-        <p> email ID:@email.Emailreceived</p>
-        <p> email ID:@email.EmailSender</p>
-        <p> email ID:@email.EmailStatus</p>
+        <a class="btn btn-primary"
+           href="@Url.Action("GetEmailInfo", "EmailInfo", new { emailId=@email.EmailId})">
+            email ID:@email.EmailId , send by @email.EmailSender is received on @email.Emailreceived and is currently @email.EmailStatus
+        </a>
+        <br />
+        <br />
+
+
 
     }
 }

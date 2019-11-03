@@ -34,6 +34,7 @@ namespace TBIProject.Controllers
 
             return View(new EmailListModel(applications.ToList()));
         }
+        
 
     }
 }
