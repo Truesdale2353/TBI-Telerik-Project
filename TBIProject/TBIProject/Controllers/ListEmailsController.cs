@@ -4,14 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TBIProject.Models.EmailModels;
-using TBIProject.Service.Interfaces;
+using TBIProject.Services.Contracts;
+using TBIProject.Services.Implementation;
 
 namespace TBIProject.Controllers
 {
     public class ListEmailsController : Controller
     {
-        private IEmailService service { get; }
-        public ListEmailsController(IEmailService service)
+        private IEmailListService service { get; }
+        public ListEmailsController(IEmailListService service)
         {
             this.service = service;
         }
