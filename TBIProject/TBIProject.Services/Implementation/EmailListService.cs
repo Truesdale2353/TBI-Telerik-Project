@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,12 +51,15 @@ namespace TBIProject.Services.Implementation
 
         public async Task AddNewlyReceivedMessage(string gmailId, string body)
         {
+            if (await this.context.Applications.AnyAsync(u => u.GmailId == gmailId)) return;
+
             var app = new Application
             {
                 GmailId = gmailId,
                 Body = encrypter.Encrypt(body),
                 Received = DateTime.UtcNow,
-                ApplicationStatus = ApplicationStatus.NotReviewed
+                ApplicationStatus = ApplicationStatus.NotReviewed,
+                LastChange = DateTime.UtcNow
             };
 
             await this.context.Applications.AddAsync(app);
