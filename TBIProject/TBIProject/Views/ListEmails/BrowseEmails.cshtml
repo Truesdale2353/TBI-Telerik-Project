@@ -5,15 +5,24 @@
 
 <h1>BrowseEmails</h1>
 <a class="btn btn-primary"
-   href="@Url.Action("BrowseEmails", "ListEmails",
-        new { filter=1 })">Not Reviewed</a>
-@{ 
+   href="@Url.Action("BrowseEmails", "ListEmails", new { filter=0 })">List all</a>
+<a class="btn btn-primary"
+   href="@Url.Action("BrowseEmails", "ListEmails", new { filter=1 })"> List Not Reviewed</a>
+<a class="btn btn-primary"
+   href="@Url.Action("BrowseEmails", "ListEmails", new { filter = 2 })">List Invalid Application</a>
+<a class="btn btn-primary"
+   href="@Url.Action("BrowseEmails", "ListEmails", new { filter = 3 })">List New</a>
+<a class="btn btn-primary"
+   href="@Url.Action("BrowseEmails", "ListEmails", new { filter = 4 })">List Open</a>
+<a class="btn btn-primary"
+   href="@Url.Action("BrowseEmails", "ListEmails", new { filter = 5 })">List Closed</a>
+@{
     foreach (var email in Model.emailList)
     {
         <p> email ID:@email.EmailId</p>
         <p> email ID:@email.Emailreceived</p>
         <p> email ID:@email.EmailSender</p>
         <p> email ID:@email.EmailStatus</p>
-        
+
     }
 }
