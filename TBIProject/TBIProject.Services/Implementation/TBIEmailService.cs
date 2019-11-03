@@ -2,6 +2,7 @@
 using Google.Apis.Gmail.v1.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TBIProject.Services.Contracts;
@@ -79,6 +80,11 @@ namespace TBIProject.Services.Implementation
             } while (!String.IsNullOrEmpty(request.PageToken));
 
             return result;
+        }
+
+        public async Task<string> GetMessageEmailSenderAsync(Message message)
+        {
+            return message.Payload.Headers.FirstOrDefault(h => h.Name == "Return-Path").Value;
         }
     }
 }

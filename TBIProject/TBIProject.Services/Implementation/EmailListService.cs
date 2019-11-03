@@ -48,7 +48,7 @@ namespace TBIProject.Services.Implementation
             return applications.ToList();
         }
 
-        public async Task AddNewlyReceivedMessage(string gmailId, string body)
+        public async Task AddNewlyReceivedMessage(string gmailId, string body, string senderEmail)
         {
             if (await this.context.Applications.AnyAsync(u => u.GmailId == gmailId)) return;
 
@@ -56,6 +56,7 @@ namespace TBIProject.Services.Implementation
             {
                 GmailId = gmailId,
                 Body = encrypter.Encrypt(body),
+                Email = senderEmail,
                 Received = DateTime.UtcNow,
                 ApplicationStatus = ApplicationStatus.NotReviewed,
                 LastChange = DateTime.UtcNow
