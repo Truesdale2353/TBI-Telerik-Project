@@ -15,6 +15,7 @@ namespace TBIProject.Controllers
 
         public IActionResult GetEmailInfo(int emailId)
         {
+           
             return View();
         }
 

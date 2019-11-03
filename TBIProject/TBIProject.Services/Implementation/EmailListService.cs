@@ -8,15 +8,19 @@ using TBIProject.Data.Models;
 using TBIProject.Data.Models.Enums;
 using TBIProject.Services.Contracts;
 using TBIProject.Services.Models;
+using TBIProject.Services.Providers.Encryption;
 
 namespace TBIProject.Services.Implementation
 {
     public class EmailListService : IEmailListService
     {
         private readonly TBIContext context;
-        public EmailListService(TBIContext context)
+        private readonly IEncrypter encrypter;
+
+        public EmailListService(TBIContext context, IEncrypter encrypter)
         {
             this.context = context;
+            this.encrypter = encrypter;
         }
         public async Task<List<EmailServiceModel>> ListEmails(int filter)
         {
@@ -49,7 +53,7 @@ namespace TBIProject.Services.Implementation
             var app = new Application
             {
                 GmailId = gmailId,
-                Body = body,
+                Body = encrypter.Encrypt(body),
                 Received = DateTime.UtcNow,
                 ApplicationStatus = ApplicationStatus.NotReviewed
             };
