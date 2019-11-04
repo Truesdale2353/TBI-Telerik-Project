@@ -20,6 +20,7 @@ using TBIProject.Services.Contracts;
 using Google.Apis.Services;
 using TBIProject.Services.Implementation;
 using TBIProject.Services.Providers.Encryption;
+using Microsoft.Extensions.Logging;
 
 namespace TBIProject
 {
@@ -71,7 +72,7 @@ namespace TBIProject
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UpdateDatabase();
 
@@ -92,6 +93,8 @@ namespace TBIProject
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            loggerFactory.AddLog4Net();
 
             app.UseMvc(routes =>
             {
