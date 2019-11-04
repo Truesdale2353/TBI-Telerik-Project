@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TBIProject.Data.Models;
 using TBIProject.Models.EmailModels;
 using TBIProject.Services.Contracts;
 using TBIProject.Services.Implementation;
@@ -12,6 +14,7 @@ namespace TBIProject.Controllers
     public class ListEmailsController : Controller
     {
         private IEmailListService service { get; }
+    
         public ListEmailsController(IEmailListService service)
         {
             this.service = service;
@@ -34,6 +37,9 @@ namespace TBIProject.Controllers
 
             return View(new EmailListModel(applications.ToList()));
         }
+
+       
+       
         
 
     }

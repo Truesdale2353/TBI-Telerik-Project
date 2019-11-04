@@ -39,5 +39,14 @@ namespace TBIProject.Controllers
             return View(applicationEmailView);
         }
 
+        public async Task<IActionResult> UpdateEmail(int emailId,string newStatus)
+        {
+            var loggedUserUsername = User.Identity.Name;
+        var success=   await processingService.ProcessEmailUpdate(emailId, newStatus, loggedUserUsername);
+            return null;
+        }
+
+
+
     }
 }
