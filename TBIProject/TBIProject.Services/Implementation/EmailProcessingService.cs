@@ -24,9 +24,12 @@ namespace TBIProject.Services.Implementation
             this.userManager = userManager;
         }
 
-        public async Task<FullEmailServiceModel> GetEmailFullInfo(int emailID)
+        public async Task<FullEmailServiceModel> GetEmailFullInfo(int emailID,string userName)
         {
             var applicationEmail = await context.Applications.FindAsync(emailID);
+            var currentUser = await userManager.FindByNameAsync(userName);
+            var permittedOp = await ReturnPermitedUpdates(applicationEmail.ApplicationStatus, currentUser);
+            var allowedToWork = await IsTheLoggedUserPermitedToUpdateTheEmail(currentUser,applicationEmail);
 
             var serviceApplicationEmail = new FullEmailServiceModel
             {
@@ -35,7 +38,9 @@ namespace TBIProject.Services.Implementation
                 EmailSender = applicationEmail.Email,
                 EmailStatus = applicationEmail.ApplicationStatus,
                 Body = encrypter.Decrypt(applicationEmail.Body),
-                OperatorId = applicationEmail.OperatorId
+                OperatorId=applicationEmail.OperatorId,
+                PermitedOperations = permittedOp,
+                AllowedToWork = allowedToWork
             };
 
             return serviceApplicationEmail;
@@ -57,7 +62,7 @@ namespace TBIProject.Services.Implementation
 
             return true;
         }
-        public async Task<List<string>> ReturnPermitedUpdates(ApplicationStatus currentStatus, User currentUser)
+        private async Task<List<string>> ReturnPermitedUpdates(ApplicationStatus currentStatus, User currentUser)
         {
 
             if (await userManager.IsInRoleAsync(currentUser, "Manager"))
@@ -83,7 +88,7 @@ namespace TBIProject.Services.Implementation
         {
             if (await userManager.IsInRoleAsync(currentUser, "Manager")) return true;
 
-            if (selectedEmail.CurrentlyOpenedBy==null||selectedEmail.CurrentlyOpenedBy==currentUser)
+            if (selectedEmail.OperatorId == null||selectedEmail.OperatorId==currentUser.Id)
             {
                 return true;
             }
@@ -94,9 +99,9 @@ namespace TBIProject.Services.Implementation
 
         private async Task UpdateApplication(string newStatus, Application selectedEmail,User currentUser)
         {
-            if (selectedEmail.CurrentlyOpenedBy==null&&selectedEmail.ApplicationStatus==ApplicationStatus.NotReviewed)
+            if (selectedEmail.OperatorId==null&&selectedEmail.ApplicationStatus==ApplicationStatus.NotReviewed)
             {
-                selectedEmail.CurrentlyOpenedBy = currentUser;
+                selectedEmail.OperatorId = currentUser.Id;
             }        
 
             ApplicationStatus myStatus;

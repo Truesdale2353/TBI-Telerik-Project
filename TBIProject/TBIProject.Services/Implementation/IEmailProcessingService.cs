@@ -1,12 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using TBIProject.Data.Models;
+using TBIProject.Data.Models.Enums;
 using TBIProject.Services.Models;
 
 namespace TBIProject.Services.Implementation
 {
     public interface IEmailProcessingService
     {
-        Task<FullEmailServiceModel> GetEmailFullInfo(int emailID);
-
-         Task<bool> ProcessEmailUpdate(int emailId, string newStatus, string currentUsername);
+        Task<FullEmailServiceModel> GetEmailFullInfo(int emailID,string currentUser);       
+        Task<bool> ProcessEmailUpdate(int emailId, string newStatus, string currentUserName);
+      
     }
 }

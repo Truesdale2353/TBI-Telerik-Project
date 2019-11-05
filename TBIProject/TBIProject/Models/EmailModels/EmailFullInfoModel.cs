@@ -14,5 +14,8 @@ namespace TBIProject.Models.EmailModels
         public ApplicationStatus EmailStatus { get; set; }
         public string Body { get; set; }
         public string OperatorId { get; set; }
+        public List<string> PermitedOperations { get; set; }
+        public bool AllowedToWork { get; set; }
+
     }
 }

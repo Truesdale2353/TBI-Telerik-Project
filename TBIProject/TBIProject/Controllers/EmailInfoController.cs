@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TBIProject.Data.Models;
 using TBIProject.Models.EmailModels;
 using TBIProject.Services.Implementation;
 
@@ -14,7 +16,7 @@ namespace TBIProject.Controllers
         private readonly IEmailProcessingService processingService;
         public EmailInfoController(IEmailProcessingService processingService)
         {
-            this.processingService = processingService;
+            this.processingService = processingService;        
         }
         public IActionResult Index()
         {
@@ -23,27 +25,31 @@ namespace TBIProject.Controllers
 
         public async Task<IActionResult> GetEmailInfo(int emailId)
         {
-            var applicationEmail = await processingService.GetEmailFullInfo(emailId);
+            var userName = User.Identity.Name;
+            var applicationEmail = await processingService.GetEmailFullInfo(emailId,userName);
+
 
             var applicationEmailView = new EmailFullInfoModel
             {
                 EmailId = applicationEmail.EmailId,
                 Emailreceived = applicationEmail.Emailreceived,
-                EmailSender=applicationEmail.EmailSender,
-                EmailStatus=applicationEmail.EmailStatus,
-                Body= applicationEmail.Body,
-                OperatorId= applicationEmail.OperatorId
+                EmailSender = applicationEmail.EmailSender,
+                EmailStatus = applicationEmail.EmailStatus,
+                Body = applicationEmail.Body,
+                OperatorId=applicationEmail.OperatorId,
+                AllowedToWork = applicationEmail.AllowedToWork,
+                PermitedOperations=applicationEmail.PermitedOperations
 
             };
 
             return View(applicationEmailView);
         }
-
-        public async Task<IActionResult> UpdateEmail(int emailId,string newStatus)
+        [HttpPost]
+        public async Task<IActionResult> UpdateEmail(EmailInfoUpdate emailUpdate)
         {
             var loggedUserUsername = User.Identity.Name;
-        var success=   await processingService.ProcessEmailUpdate(emailId, newStatus, loggedUserUsername);
-            return null;
+        var success=   await processingService.ProcessEmailUpdate(emailUpdate.EmailId, emailUpdate.NewStatus, loggedUserUsername);
+            return RedirectToAction("GetEmailInfo", "EmailInfo",new { emailId=emailUpdate.EmailId });
         }
 
 

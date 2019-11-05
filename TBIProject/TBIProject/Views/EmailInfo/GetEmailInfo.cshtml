@@ -8,6 +8,35 @@
 <p>@Model.EmailId</p>
 <p>@Model.Emailreceived</p>
 <p>@Model.EmailSender</p>
-<p>@Model.EmailStatus</p>
 <p>@Model.Body</p>
 <p>@Model.OperatorId</p>
+@if (Model.AllowedToWork)
+{
+<form name="emailUpdate" action="/EmailInfo/UpdateEmail" method="post" onsubmit="return validateForm(this)">
+    <input type="hidden" name="EmailId" value="@Model.EmailId" />
+
+    @if (Model.PermitedOperations != null)
+    {
+    <input type="radio" name="NewStatus" value="@Model.EmailStatus" checked="checked">@Model.EmailStatus<br>
+        @foreach (var operation in Model.PermitedOperations)
+        {
+            if (operation == Model.EmailStatus.ToString())
+            {
+                continue;
+            }
+            <input type="radio" name="NewStatus" value="@operation">@operation<br />
+        }
+    }
+    else
+    {
+        <p>@Model.EmailStatus</p>
+    }
+
+
+    <input class="badge-primary" type="submit" value="Submit">
+</form>
+}
+else
+{
+    <p>@Model.EmailStatus</p>
+}
