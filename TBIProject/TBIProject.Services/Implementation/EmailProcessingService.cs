@@ -63,6 +63,8 @@ namespace TBIProject.Services.Implementation
                 await UpdateApplication(parameters.NewStatus, emailToBeUpdated, currentLoggedUser);
                 var success = await UpdateApplicationProperties(parameters.PhoneNumber, parameters.EGN, emailToBeUpdated);
                 if (!success) return false;
+                emailToBeUpdated.LastChange = DateTime.Now;
+                await context.SaveChangesAsync();
             }
 
             return true;
