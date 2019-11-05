@@ -11,12 +11,12 @@ using TBIProject.Services.Implementation;
 namespace TBIProject.Controllers
 {
     public class EmailInfoController : Controller
-    { 
+    {
 
         private readonly IEmailProcessingService processingService;
         public EmailInfoController(IEmailProcessingService processingService)
         {
-            this.processingService = processingService;        
+            this.processingService = processingService;
         }
         public IActionResult Index()
         {
@@ -26,8 +26,7 @@ namespace TBIProject.Controllers
         public async Task<IActionResult> GetEmailInfo(int emailId)
         {
             var userName = User.Identity.Name;
-            var applicationEmail = await processingService.GetEmailFullInfo(emailId,userName);
-
+            var applicationEmail = await processingService.GetEmailFullInfo(emailId, userName);
 
             var applicationEmailView = new EmailFullInfoModel
             {
@@ -36,9 +35,9 @@ namespace TBIProject.Controllers
                 EmailSender = applicationEmail.EmailSender,
                 EmailStatus = applicationEmail.EmailStatus,
                 Body = applicationEmail.Body,
-                OperatorId=applicationEmail.OperatorId,
+                OperatorId = applicationEmail.OperatorId,
                 AllowedToWork = applicationEmail.AllowedToWork,
-                PermitedOperations=applicationEmail.PermitedOperations
+                PermitedOperations = applicationEmail.PermitedOperations
 
             };
 
@@ -48,8 +47,12 @@ namespace TBIProject.Controllers
         public async Task<IActionResult> UpdateEmail(EmailInfoUpdate emailUpdate)
         {
             var loggedUserUsername = User.Identity.Name;
-        var success=   await processingService.ProcessEmailUpdate(emailUpdate.EmailId, emailUpdate.NewStatus, loggedUserUsername);
-            return RedirectToAction("GetEmailInfo", "EmailInfo",new { emailId=emailUpdate.EmailId });
+            var success = await processingService.ProcessEmailUpdate(emailUpdate.EmailId, emailUpdate.NewStatus, loggedUserUsername);
+            if (success)
+            {
+                return RedirectToAction("GetEmailInfo", "EmailInfo", new { emailId = emailUpdate.EmailId });
+            }
+            return BadRequest();
         }
 
 
