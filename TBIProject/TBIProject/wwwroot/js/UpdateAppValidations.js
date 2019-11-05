@@ -4,7 +4,6 @@
     let egn = $("#EGN").val();
     let phoneNumber = $("#phone").val()
     let d = checkEgn(egn);
-    console.log(/^([a-z0-9]{5,})$/.test('abc1'));
     if (!(/^((359)|(\+359)|(0)){1}[\d]{9,11}$/.test(phoneNumber)))
     {        
         document.getElementById("phoneAlert").innerHTML = "Invalid phone number";
@@ -35,7 +34,7 @@ $(".newStat").change(function () {
             + "<input type = 'text' name = 'EGN' id = 'EGN' > "
             + " <p class='text-danger' id='EGNAlert'></p>"
             + "<label for='phone'>phone number</label>" + "<br>"
-            + "<input type = 'text' name = 'phone' id = 'phone' > "
+            + "<input type = 'text' name = 'PhoneNumber' id = 'phone' > "
             + "<br>"
             + " <p class='text-danger' id='phoneAlert'></p>");
     }

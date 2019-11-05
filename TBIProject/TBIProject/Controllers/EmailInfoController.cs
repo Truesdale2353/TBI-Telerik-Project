@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using TBIProject.Data.Models;
 using TBIProject.Models.EmailModels;
 using TBIProject.Services.Implementation;
+using TBIProject.Services.Models;
 
 namespace TBIProject.Controllers
 {
@@ -46,8 +47,18 @@ namespace TBIProject.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateEmail(EmailInfoUpdate emailUpdate)
         {
+
             var loggedUserUsername = User.Identity.Name;
-            var success = await processingService.ProcessEmailUpdate(emailUpdate.EmailId, emailUpdate.NewStatus, loggedUserUsername);
+            var updateParameters = new EmailUpdateModel
+            {
+                EGN = emailUpdate.EGN,
+                EmailId = emailUpdate.EmailId,
+                LoggedUserUsername = loggedUserUsername,
+                NewStatus = emailUpdate.NewStatus,
+                PhoneNumber = emailUpdate.PhoneNumber
+            };
+            var success = await processingService.ProcessEmailUpdate(updateParameters);     
+
             if (success)
             {
                 return RedirectToAction("GetEmailInfo", "EmailInfo", new { emailId = emailUpdate.EmailId });

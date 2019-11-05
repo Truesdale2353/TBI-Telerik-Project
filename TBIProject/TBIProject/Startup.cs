@@ -21,6 +21,7 @@ using Google.Apis.Services;
 using TBIProject.Services.Implementation;
 using TBIProject.Services.Providers.Encryption;
 using Microsoft.Extensions.Logging;
+using TBIProject.Services.Providers.Validation;
 
 namespace TBIProject
 {
@@ -67,6 +68,7 @@ namespace TBIProject
             services.AddTransient<IEmailListService, EmailListService>();
             services.AddTransient<IEncrypter, Encrypter>();
             services.AddTransient<IEmailProcessingService, EmailProcessingService>();
+            services.AddTransient<IValidator, Validator>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

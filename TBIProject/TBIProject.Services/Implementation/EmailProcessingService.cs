@@ -9,6 +9,7 @@ using TBIProject.Data.Models;
 using TBIProject.Data.Models.Enums;
 using TBIProject.Services.Models;
 using TBIProject.Services.Providers.Encryption;
+using TBIProject.Services.Providers.Validation;
 
 namespace TBIProject.Services.Implementation
 {
@@ -17,11 +18,13 @@ namespace TBIProject.Services.Implementation
         private TBIContext context;
         private IEncrypter encrypter;
         private UserManager<User> userManager;
-        public EmailProcessingService(TBIContext context, IEncrypter encrypter, UserManager<User> userManager)
+        private IValidator validator;
+        public EmailProcessingService(TBIContext context, IEncrypter encrypter, UserManager<User> userManager,IValidator validator)
         {
             this.context = context;
             this.encrypter = encrypter;
             this.userManager = userManager;
+            this.validator = validator;
         }
 
         public async Task<FullEmailServiceModel> GetEmailFullInfo(int emailID,string userName)
@@ -46,18 +49,20 @@ namespace TBIProject.Services.Implementation
             return serviceApplicationEmail;
         }
 
-        public async Task<bool> ProcessEmailUpdate(int emailId, string newStatus, string currentUsername)
+        public async Task<bool> ProcessEmailUpdate(EmailUpdateModel parameters)
         {
-            var emailToBeUpdated = await context.Applications.FindAsync(emailId);
-            var currentLoggedUser = await userManager.FindByNameAsync(currentUsername);
+            var emailToBeUpdated = await context.Applications.FindAsync(parameters.EmailId);
+            var currentLoggedUser = await userManager.FindByNameAsync(parameters.LoggedUserUsername);
             var listOfPermittedStatuses = await ReturnPermitedUpdates(emailToBeUpdated.ApplicationStatus, currentLoggedUser);
 
-            if (!listOfPermittedStatuses.Contains(newStatus)) return false;
+            if (!listOfPermittedStatuses.Contains(parameters.NewStatus)) return false;
 
             var permitionGranted = await IsTheLoggedUserPermitedToUpdateTheEmail(currentLoggedUser,emailToBeUpdated);
             if (permitionGranted)
             {
-                await UpdateApplication(newStatus, emailToBeUpdated, currentLoggedUser);
+                await UpdateApplication(parameters.NewStatus, emailToBeUpdated, currentLoggedUser);
+                var success = await UpdateApplicationProperties(parameters.PhoneNumber, parameters.EGN, emailToBeUpdated);
+                if (!success) return false;
             }
 
             return true;
@@ -110,6 +115,21 @@ namespace TBIProject.Services.Implementation
             // Log changes
             await context.SaveChangesAsync();
         }
+
+        private async Task<bool> UpdateApplicationProperties(string phone,string egn,Application app)
+        {
+            var isEgnValid=await validator.ValidateEGN(egn);
+            var isPhoneValid = await validator.ValidatePhone(phone);
+            if (isEgnValid&&isPhoneValid)
+            {
+                app.EGN = encrypter.Encrypt(egn);
+                app.Phone = encrypter.Encrypt(phone);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+       
 
     }
 }

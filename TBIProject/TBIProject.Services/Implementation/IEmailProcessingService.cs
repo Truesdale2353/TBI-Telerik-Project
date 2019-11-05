@@ -9,7 +9,9 @@ namespace TBIProject.Services.Implementation
     public interface IEmailProcessingService
     {
         Task<FullEmailServiceModel> GetEmailFullInfo(int emailID,string currentUser);       
-        Task<bool> ProcessEmailUpdate(int emailId, string newStatus, string currentUserName);
-      
+        Task<bool> ProcessEmailUpdate(EmailUpdateModel parameters);
+       
+
+
     }
 }
