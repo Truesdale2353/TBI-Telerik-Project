@@ -64,7 +64,7 @@ namespace TBIProject.Services.Implementation
                 var success = await UpdateApplicationProperties(parameters.PhoneNumber, parameters.EGN, emailToBeUpdated);
                 if (!success) return false;
                 emailToBeUpdated.LastChange = DateTime.Now;
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(currentLoggedUser);
             }
 
             return true;
@@ -100,8 +100,6 @@ namespace TBIProject.Services.Implementation
                 return true;
             }
             return false;
-            
-
         }
 
         private async Task UpdateApplication(string newStatus, Application selectedEmail,User currentUser)
@@ -115,13 +113,15 @@ namespace TBIProject.Services.Implementation
             Enum.TryParse(newStatus, out myStatus);
             selectedEmail.ApplicationStatus = myStatus;
             // Log changes
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(currentUser);
         }
 
         private async Task<bool> UpdateApplicationProperties(string phone,string egn,Application app)
         {
             var isEgnValid=await validator.ValidateEGN(egn);
+            
             var isPhoneValid = await validator.ValidatePhone(phone);
+
             if (isEgnValid&&isPhoneValid)
             {
                 app.EGN = encrypter.Encrypt(egn);

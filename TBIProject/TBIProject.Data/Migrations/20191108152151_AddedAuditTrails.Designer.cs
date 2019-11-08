@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TBIProject.Data;
 
 namespace TBIProject.Data.Migrations
 {
     [DbContext(typeof(TBIContext))]
-    partial class TBIContextModelSnapshot : ModelSnapshot
+    [Migration("20191108152151_AddedAuditTrails")]
+    partial class AddedAuditTrails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

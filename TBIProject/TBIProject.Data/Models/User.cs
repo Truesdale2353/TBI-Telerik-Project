@@ -13,5 +13,7 @@ namespace TBIProject.Data.Models
         public List<Application> Applicatons { get; set; }
        
         public ICollection<Loan> Loans { get; set; }
+
+        public ICollection<AuditTrail> AuditTrails { get; set; }
     }
 }

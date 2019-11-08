@@ -10,6 +10,8 @@ namespace TBIProject.Services.Providers.Validation
     {
         public async Task<bool> ValidateEGN(string egn)
         {
+            if (string.IsNullOrEmpty(egn)) return false;
+
             if (egn.Length != 10)
                 return false;
             var result = Regex.Match(egn, "[^0 - 9]");
@@ -57,6 +59,8 @@ namespace TBIProject.Services.Providers.Validation
 
         public async Task<bool> ValidatePhone(string phone)
         {
+            if (string.IsNullOrEmpty(phone)) return false;
+
             var result = Regex.Match(phone, "^((359)|(\\+359)|(0)){1}[\\d]{9,11}$");
             if (result.Success)
             {
