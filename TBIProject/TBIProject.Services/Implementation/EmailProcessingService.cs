@@ -77,7 +77,20 @@ namespace TBIProject.Services.Implementation
 
             if (await userManager.IsInRoleAsync(currentUser, "Manager"))
             {
-                return Enum.GetNames(typeof(ApplicationStatus)).ToList();
+                if (currentStatus == ApplicationStatus.NotReviewed)
+                    return new List<string> { nameof(ApplicationStatus.InvalidApplication), nameof(ApplicationStatus.New) };
+
+                if (currentStatus == ApplicationStatus.New)
+                    return new List<string> { nameof(ApplicationStatus.Open) };
+
+                if (currentStatus == ApplicationStatus.Open)
+                    return new List<string> { nameof(ApplicationStatus.New), nameof(ApplicationStatus.Closed) };
+
+                if (currentStatus == ApplicationStatus.Open)
+                    return new List<string> { nameof(ApplicationStatus.Closed) };
+
+                if (currentStatus == ApplicationStatus.Closed)
+                    return new List<string> { nameof(ApplicationStatus.New) };
             }
             if (await userManager.IsInRoleAsync(currentUser, "Operator"))
             {
