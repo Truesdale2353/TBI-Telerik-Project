@@ -40,7 +40,7 @@ namespace TBIProject.Services.Implementation
             {
                 EmailId = b.Id,
                 Emailreceived = b.Received,
-                EmailSender = b.Email,
+                EmailSender = encrypter.Decrypt(b.Email),
                 EmailStatus = b.ApplicationStatus,
                
 
@@ -56,7 +56,7 @@ namespace TBIProject.Services.Implementation
             {
                 GmailId = gmailId,
                 Body = encrypter.Encrypt(body),
-                Email = senderEmail,
+                Email = encrypter.Encrypt(senderEmail),
                 Received = DateTime.UtcNow,
                 ApplicationStatus = ApplicationStatus.NotReviewed,
                 LastChange = DateTime.UtcNow

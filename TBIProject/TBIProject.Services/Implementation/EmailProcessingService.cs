@@ -38,7 +38,7 @@ namespace TBIProject.Services.Implementation
             {
                 EmailId = applicationEmail.Id,
                 Emailreceived = applicationEmail.Received,
-                EmailSender = applicationEmail.Email,
+                EmailSender = encrypter.Decrypt(applicationEmail.Email),
                 EmailStatus = applicationEmail.ApplicationStatus,
                 Body = encrypter.Decrypt(applicationEmail.Body),
                 OperatorId=applicationEmail.OperatorId,
