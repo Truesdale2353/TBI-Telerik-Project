@@ -25,8 +25,8 @@ namespace TBIProject.Infrastructure.Extensions
                 string credPath = "token.json";
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
-                    new string[] { GmailService.Scope.GmailModify },
-                    "user",
+                    new string[] { GmailService.Scope.GmailModify, GmailService.Scope.GmailCompose, GmailService.Scope.GmailSend, GmailService.Scope.MailGoogleCom },
+                    "XXXX",
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
             }

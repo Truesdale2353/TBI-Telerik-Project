@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TBIProject.Data.Models;
 using TBIProject.Models.Admin;
+using System.Web;
 
 namespace TBIProject.Controllers
 {
@@ -52,6 +53,7 @@ namespace TBIProject.Controllers
                 {
                     return View(model);
                 }
+                
             }
 
             return RedirectToAction("Index", "Home");
@@ -59,11 +61,18 @@ namespace TBIProject.Controllers
 
         private async Task<string> GetPassword(string email)
         {
+            if(string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException("Email cannot be null!");
+            }
+
             var firstPart = email.Split("@");
+
+            if (firstPart.Length <= 1) throw new ArgumentOutOfRangeException("Not a valid email!");
 
             var secondPart = firstPart[1].Split(".");
 
-            var password = firstPart[0] + secondPart[0] + "12";
+            var password = firstPart[0] + secondPart[0] + "1234" + Char.ToUpper(firstPart[0][0]) + "$";
 
             return password;
         }
