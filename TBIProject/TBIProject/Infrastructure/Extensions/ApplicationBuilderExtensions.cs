@@ -49,7 +49,35 @@ namespace TBIProject.Infrastructure.Extensions
                         });
                     }
 
-                    var adminName = "manager@manager.com";
+                    var managerName = "manager@manager.com";
+
+                    var managerUser = await userManager.FindByEmailAsync(managerName);
+
+                    if (managerUser == null)
+                    {
+                        managerUser = new User
+                        {
+                            UserName = managerName,
+                            Email = "manager@manager.com"
+                        };
+
+                        await userManager.CreateAsync(managerUser, "manager12");
+                        await userManager.AddToRoleAsync(managerUser, managerRole);
+                    }
+
+                    var adminRole = "Admin";
+
+                    var adminRoleExists = await roleManager.RoleExistsAsync(adminRole);
+
+                    if (!adminRoleExists)
+                    {
+                        await roleManager.CreateAsync(new IdentityRole
+                        {
+                            Name = adminRole
+                        });
+                    }
+
+                    var adminName = "admin@admin.com";
 
                     var adminUser = await userManager.FindByEmailAsync(adminName);
 
@@ -58,11 +86,11 @@ namespace TBIProject.Infrastructure.Extensions
                         adminUser = new User
                         {
                             UserName = adminName,
-                            Email = "manager@manager.com"
+                            Email = "admin@admin.com"
                         };
 
-                        await userManager.CreateAsync(adminUser, "manager12");
-                        await userManager.AddToRoleAsync(adminUser, managerRole);
+                        await userManager.CreateAsync(adminUser, "admin12");
+                        await userManager.AddToRoleAsync(adminUser, adminRole);
                     }
 
                 })

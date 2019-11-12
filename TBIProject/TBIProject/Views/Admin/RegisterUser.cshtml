@@ -1,0 +1,19 @@
+﻿@model RegisterUserModel
+@{
+    ViewData["Title"] = "Register User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>RegisterUser</h1>
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <select class="form-control" asp-for="RoleId" asp-items="Model.Roles">
+    </select>
+    </br>
+    <input class="btn btn-primary" type="submit" value="Register User"/>
+</form>
+
