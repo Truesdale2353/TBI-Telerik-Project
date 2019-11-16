@@ -38,7 +38,8 @@ namespace TBIProject.Controllers
                 Body = applicationEmail.Body,
                 OperatorId = applicationEmail.OperatorId,
                 AllowedToWork = applicationEmail.AllowedToWork,
-                PermitedOperations = applicationEmail.PermitedOperations
+                PermitedOperations = applicationEmail.PermitedOperations,
+                CurrentDataTimeStamp=applicationEmail.CurrentDataStamp
 
             };
 
@@ -55,12 +56,20 @@ namespace TBIProject.Controllers
                 EmailId = emailUpdate.EmailId,
                 LoggedUserUsername = loggedUserUsername,
                 NewStatus = emailUpdate.NewStatus,
-                PhoneNumber = emailUpdate.PhoneNumber
+                PhoneNumber = emailUpdate.PhoneNumber,              
+                
             };
+            var doWeUpdateValidData = await processingService.ValidateEmailTimeStamp(emailUpdate.EmailId, emailUpdate.CurrentDataStamp);
+            if (!doWeUpdateValidData)
+            {
+                this.TempData["executionMessage"] = "The data you are trying to access has been changed, this is the latest version.";
+                return RedirectToAction("GetEmailInfo", "EmailInfo", new { emailId = emailUpdate.EmailId });
+            }
             var success = await processingService.ProcessEmailUpdate(updateParameters);     
 
             if (success)
             {
+                this.TempData["executionMessage"] = "";
                 return RedirectToAction("GetEmailInfo", "EmailInfo", new { emailId = emailUpdate.EmailId });
             }
             return BadRequest();

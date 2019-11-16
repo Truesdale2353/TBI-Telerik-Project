@@ -33,7 +33,6 @@ namespace TBIProject.Services.Implementation
             var currentUser = await userManager.FindByNameAsync(userName);
             var permittedOp = await ReturnPermitedUpdates(applicationEmail.ApplicationStatus, currentUser);
             var allowedToWork = await IsTheLoggedUserPermitedToUpdateTheEmail(currentUser,applicationEmail);
-
             var serviceApplicationEmail = new FullEmailServiceModel
             {
                 EmailId = applicationEmail.Id,
@@ -41,19 +40,31 @@ namespace TBIProject.Services.Implementation
                 EmailSender = encrypter.Decrypt(applicationEmail.Email),
                 EmailStatus = applicationEmail.ApplicationStatus,
                 Body = encrypter.Decrypt(applicationEmail.Body),
-                OperatorId=applicationEmail.OperatorId,
+                OperatorId = applicationEmail.OperatorId,
                 PermitedOperations = permittedOp,
-                AllowedToWork = allowedToWork
+                AllowedToWork = allowedToWork,
+                CurrentDataStamp = applicationEmail.LastChange.Ticks.ToString()
+                
             };
 
             return serviceApplicationEmail;
         }
+        public async Task<bool> ValidateEmailTimeStamp(int emailId ,string emailStamp)
+        {
+            var emailToBeUpdated = await context.Applications.FindAsync(emailId);
 
-        public async Task<bool> ProcessEmailUpdate(EmailUpdateModel parameters)
+            if (emailToBeUpdated.LastChange.Ticks.ToString()!= emailStamp)
+            {
+                return false;
+            }
+            return true;
+        }
+
+            public async Task<bool> ProcessEmailUpdate(EmailUpdateModel parameters)
         {
             var emailToBeUpdated = await context.Applications.FindAsync(parameters.EmailId);
             var currentLoggedUser = await userManager.FindByNameAsync(parameters.LoggedUserUsername);
-            var listOfPermittedStatuses = await ReturnPermitedUpdates(emailToBeUpdated.ApplicationStatus, currentLoggedUser);
+            var listOfPermittedStatuses = await ReturnPermitedUpdates(emailToBeUpdated.ApplicationStatus, currentLoggedUser);         
 
             if (!listOfPermittedStatuses.Contains(parameters.NewStatus)) return false;
 

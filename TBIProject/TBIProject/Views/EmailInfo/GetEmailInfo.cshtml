@@ -10,14 +10,17 @@
 <p>@Model.EmailSender</p>
 <p>@Model.Body</p>
 <p>@Model.OperatorId</p>
+<h2 class="alert">@TempData["executionMessage"]</h2>
 @if (Model.AllowedToWork)
 {
 <form name="emailUpdate" action="/EmailInfo/UpdateEmail" method="post" onsubmit="return validateForm(this)">
+
     <input type="hidden" name="EmailId" value="@Model.EmailId" />
+    <input type="hidden" name="CurrentDataStamp" value="@Model.CurrentDataTimeStamp" />
 
     @if (Model.PermitedOperations != null)
     {
-    <input type="radio"  class="newStat" name="NewStatus" value="@Model.EmailStatus" checked="checked">@Model.EmailStatus<br>
+<p class="alert-info">Currently the application's status is @Model.EmailStatus</p>
         @foreach (var operation in Model.PermitedOperations)
         {
             if (operation == Model.EmailStatus.ToString())

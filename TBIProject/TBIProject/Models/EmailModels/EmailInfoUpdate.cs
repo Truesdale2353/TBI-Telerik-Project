@@ -12,6 +12,8 @@ namespace TBIProject.Models.EmailModels
         public int EmailId { get; set; }
         [Required]
         public string NewStatus { get; set; }
+        [Required]
+        public string CurrentDataStamp { get; set; }      
         public string PhoneNumber { get; set; }
         public string EGN { get; set; }
 

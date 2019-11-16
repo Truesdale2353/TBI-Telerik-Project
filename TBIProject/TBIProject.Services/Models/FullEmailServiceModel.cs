@@ -15,5 +15,6 @@ namespace TBIProject.Services.Models
         public string OperatorId { get; set; }
         public List<string> PermitedOperations { get; set; }
         public bool AllowedToWork { get; set; }
+        public string CurrentDataStamp { get; set; }
     }
 }

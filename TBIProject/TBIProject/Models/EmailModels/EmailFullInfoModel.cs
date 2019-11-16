@@ -17,5 +17,7 @@ namespace TBIProject.Models.EmailModels
         public List<string> PermitedOperations { get; set; }
         public bool AllowedToWork { get; set; }
 
+        public string CurrentDataTimeStamp { get; set; }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TBIProject.Data.Models;
 using TBIProject.Data.Models.Enums;
@@ -10,7 +11,9 @@ namespace TBIProject.Services.Implementation
     {
         Task<FullEmailServiceModel> GetEmailFullInfo(int emailID,string currentUser);       
         Task<bool> ProcessEmailUpdate(EmailUpdateModel parameters);
-       
+        Task<bool> ValidateEmailTimeStamp(int emailId, string emailStamp);
+
+
 
 
     }
