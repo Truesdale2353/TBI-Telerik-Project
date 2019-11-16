@@ -38,6 +38,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ListEmails" asp-action="BrowseEmails">Emails</a>
                         </li>
+                        @if (this.User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="RegisterUser">Register User</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

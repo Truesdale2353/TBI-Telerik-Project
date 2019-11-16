@@ -1,5 +1,6 @@
 ﻿using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,6 +86,29 @@ namespace TBIProject.Services.Implementation
         public async Task<string> GetMessageEmailSenderAsync(Message message)
         {
             return message.Payload.Headers.FirstOrDefault(h => h.Name == "Return-Path").Value;
+        }
+
+        public async Task<Message> SendMessageAsync(string email, string message, string subject)
+        {
+            var newMessage = this.BuildMessage(email, message, subject);
+
+            var encodedMessage = Base64UrlEncoder.Encode(newMessage.ToString());
+
+            var sendMessage = new Message { Raw = encodedMessage };
+
+          return await this.emailService.Users.Messages.Send(sendMessage, "telerik.tbi@gmail.com").ExecuteAsync();
+        }
+
+        private string BuildMessage(string email, string message, string subject)
+        {
+            var newMessage = new StringBuilder();
+            newMessage.AppendLine($"To: {email}");
+            newMessage.AppendLine($"From: telerik.tbi@gmail.com");
+            newMessage.AppendLine($"Subject: {subject}");
+            newMessage.AppendLine();
+            newMessage.AppendLine(message);
+
+            return newMessage.ToString();
         }
     }
 }
