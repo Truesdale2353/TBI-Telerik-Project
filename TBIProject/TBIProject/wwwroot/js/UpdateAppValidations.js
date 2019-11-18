@@ -29,6 +29,7 @@ $(".newStat").change(function () {
     var value = $(this).val();
     if (value === "Open") {
         let informationHolder = $("#data-holder");
+        $("#data-holder").empty();
         informationHolder.append(
             "<label for='EGN'>EGN</label>" + "<br>"
             + "<input type = 'text' name = 'EGN' id = 'EGN' > "
@@ -38,10 +39,23 @@ $(".newStat").change(function () {
             + "<br>"
             + " <p class='text-danger' id='phoneAlert'></p>");
     }
+    else if (value === "Accepted") {
+        let informationHolder = $("#data-holder");
+        $("#data-holder").empty();
+        informationHolder.append(
+            "<label for='FullName'>Full Name</label>" + "<br>"
+            + "<input type = 'text' name = 'FullName' id = 'FullName' > "
+            + " <p class='text-danger' id='FullNameAlert'></p>"
+            + "<label for='amount'>amount</label>" + "<br>"
+            + "<input type = 'text' name = 'Amount' id = 'Amount' > "
+            + "<br>"
+            + " <p class='text-danger' id='amountAlert'></p>");
+    }
     else {
         $("#data-holder").empty();
     }
 });
+
 
 function checkEgn(egn) {
     if (egn.length != 10)
