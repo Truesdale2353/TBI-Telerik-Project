@@ -8,11 +8,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using TBIProject.Data;
 using TBIProject.Data.Models;
+using TBIProject.Infrastructure.Middlewares;
 
 namespace TBIProject.Infrastructure.Extensions
 {
     public static class ApplicationBuilderExtensions
-    {
+    { 
+        public static IApplicationBuilder UseChangePasswordMiddleWare(this IApplicationBuilder app)
+        {
+            return app.UseMiddleware<ChangePasswordMiddleware>();
+        }
         public static void UpdateDatabase(this IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())

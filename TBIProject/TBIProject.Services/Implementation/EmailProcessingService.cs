@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TBIProject.Data;
 using TBIProject.Data.Models;
 using TBIProject.Data.Models.Enums;
+using TBIProject.Services.Contracts;
 using TBIProject.Services.Models;
 using TBIProject.Services.Providers.Encryption;
 using TBIProject.Services.Providers.Validation;
@@ -19,12 +20,14 @@ namespace TBIProject.Services.Implementation
         private IEncrypter encrypter;
         private UserManager<User> userManager;
         private IValidator validator;
-        public EmailProcessingService(TBIContext context, IEncrypter encrypter, UserManager<User> userManager, IValidator validator)
+        private readonly IEmailService emailService;
+        public EmailProcessingService(TBIContext context, IEncrypter encrypter, UserManager<User> userManager, IValidator validator, IEmailService emailService)
         {
             this.context = context;
             this.encrypter = encrypter;
             this.userManager = userManager;
             this.validator = validator;
+            this.emailService = emailService;
         }
 
         public async Task<FullEmailServiceModel> GetEmailFullInfo(int emailID, string userName)
@@ -79,7 +82,10 @@ namespace TBIProject.Services.Implementation
                     if (!success) return false;
                 }
                 if (emailToBeUpdated.ApplicationStatus == ApplicationStatus.Accepted)
-                   await this.IssueAccount(emailToBeUpdated.Email, emailToBeUpdated.Phone, emailToBeUpdated.EGN, parameters.FullName);
+                {
+                    await this.IssueAccount(emailToBeUpdated.Email, emailToBeUpdated.Phone, emailToBeUpdated.EGN, parameters.FullName);
+                    await this.IssueLoan(emailToBeUpdated.Email, parameters.Amount);
+                }
 
                 emailToBeUpdated.LastChange = DateTime.Now;
                 await context.SaveChangesAsync(currentLoggedUser);
@@ -88,6 +94,28 @@ namespace TBIProject.Services.Implementation
 
             return false;
         }
+
+        private async Task IssueLoan(string email, decimal amount)
+        {
+            var decryptedEmail = this.encrypter.Decrypt(email).TrimStart('<').TrimEnd('>');
+
+            var user = await this.userManager.FindByEmailAsync(decryptedEmail);
+
+            if (user == null) throw new ArgumentException("No such user found!");
+
+            var loan = new Loan
+            {
+                Amount = amount,
+                UserId = user.Id,
+                User = user,
+                IsDeleted = false
+            };
+
+            await this.context.Loans.AddAsync(loan);
+
+            await this.context.SaveChangesAsync();
+        }
+
         private async Task<List<string>> ReturnPermitedUpdates(ApplicationStatus currentStatus, User currentUser)
         {
 
@@ -163,21 +191,29 @@ namespace TBIProject.Services.Implementation
         {
             if (string.IsNullOrEmpty(email)) throw new ArgumentNullException("Not a valid email address");
 
+            var exists = await this.userManager.FindByEmailAsync(email);
+
+            if (exists != null) return true;
+
             var password = this.GeneratePassword();
+
+            var decryptedEmail = this.encrypter.Decrypt(email).TrimStart('<').TrimEnd('>');
 
             var user = new User
             {
-                Email = email,
-                UserName = email,
+                Email = decryptedEmail,
+                UserName = decryptedEmail,
                 PhoneNumber = phoneNumber,
                 EGN = egn,
                 FullName = fullName,
-                HasChangedPassword = false
+                HasChangedPassword = false,
             };
 
             await this.userManager.CreateAsync(user, password);
 
             await this.context.SaveChangesAsync();
+
+            await this.emailService.SendMessageAsync(decryptedEmail, $"You have been issued an account in our website. Please log in and change your passoword, otherwise you wont be able to use our system. Your username is: {decryptedEmail}, Your temporary password is: {password}", "Tbi telerik loan applcation");
 
             return true;
         }

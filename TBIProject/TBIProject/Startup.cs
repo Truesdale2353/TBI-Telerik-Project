@@ -96,6 +96,8 @@ namespace TBIProject
 
             app.UseAuthentication();
 
+            app.UseChangePasswordMiddleWare();
+
             loggerFactory.AddLog4Net();
 
             app.UseMvc(routes =>

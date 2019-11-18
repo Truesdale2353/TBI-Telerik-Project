@@ -92,6 +92,11 @@ namespace TBIProject.Areas.Identity.Pages.Account.Manage
             }
 
             await _signInManager.RefreshSignInAsync(user);
+
+            user.HasChangedPassword = true;
+
+            await this._userManager.UpdateAsync(user);
+
             _logger.LogInformation("User changed their password successfully.");
             StatusMessage = "Your password has been changed.";
 
