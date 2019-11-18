@@ -56,7 +56,9 @@ namespace TBIProject.Controllers
                 EmailId = emailUpdate.EmailId,
                 LoggedUserUsername = loggedUserUsername,
                 NewStatus = emailUpdate.NewStatus,
-                PhoneNumber = emailUpdate.PhoneNumber,              
+                PhoneNumber = emailUpdate.PhoneNumber,     
+                FullName = emailUpdate.FullName,
+                Amount = emailUpdate.Amount
                 
             };
             var doWeUpdateValidData = await processingService.ValidateEmailTimeStamp(emailUpdate.EmailId, emailUpdate.CurrentDataStamp);
@@ -65,6 +67,7 @@ namespace TBIProject.Controllers
                 this.TempData["executionMessage"] = "The data you are trying to access has been changed, this is the latest version.";
                 return RedirectToAction("GetEmailInfo", "EmailInfo", new { emailId = emailUpdate.EmailId });
             }
+
             var success = await processingService.ProcessEmailUpdate(updateParameters);     
 
             if (success)

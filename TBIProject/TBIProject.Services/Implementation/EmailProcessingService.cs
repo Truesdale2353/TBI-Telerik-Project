@@ -19,7 +19,7 @@ namespace TBIProject.Services.Implementation
         private IEncrypter encrypter;
         private UserManager<User> userManager;
         private IValidator validator;
-        public EmailProcessingService(TBIContext context, IEncrypter encrypter, UserManager<User> userManager,IValidator validator)
+        public EmailProcessingService(TBIContext context, IEncrypter encrypter, UserManager<User> userManager, IValidator validator)
         {
             this.context = context;
             this.encrypter = encrypter;
@@ -27,12 +27,12 @@ namespace TBIProject.Services.Implementation
             this.validator = validator;
         }
 
-        public async Task<FullEmailServiceModel> GetEmailFullInfo(int emailID,string userName)
+        public async Task<FullEmailServiceModel> GetEmailFullInfo(int emailID, string userName)
         {
             var applicationEmail = await context.Applications.FindAsync(emailID);
             var currentUser = await userManager.FindByNameAsync(userName);
             var permittedOp = await ReturnPermitedUpdates(applicationEmail.ApplicationStatus, currentUser);
-            var allowedToWork = await IsTheLoggedUserPermitedToUpdateTheEmail(currentUser,applicationEmail);
+            var allowedToWork = await IsTheLoggedUserPermitedToUpdateTheEmail(currentUser, applicationEmail);
             var serviceApplicationEmail = new FullEmailServiceModel
             {
                 EmailId = applicationEmail.Id,
@@ -44,39 +44,43 @@ namespace TBIProject.Services.Implementation
                 PermitedOperations = permittedOp,
                 AllowedToWork = allowedToWork,
                 CurrentDataStamp = applicationEmail.LastChange.Ticks.ToString()
-                
+
             };
 
             return serviceApplicationEmail;
         }
-        public async Task<bool> ValidateEmailTimeStamp(int emailId ,string emailStamp)
+        public async Task<bool> ValidateEmailTimeStamp(int emailId, string emailStamp)
         {
             var emailToBeUpdated = await context.Applications.FindAsync(emailId);
 
-            if (emailToBeUpdated.LastChange.Ticks.ToString()!= emailStamp)
+            if (emailToBeUpdated.LastChange.Ticks.ToString() != emailStamp)
             {
                 return false;
             }
             return true;
         }
 
-            public async Task<bool> ProcessEmailUpdate(EmailUpdateModel parameters)
+        public async Task<bool> ProcessEmailUpdate(EmailUpdateModel parameters)
         {
             var emailToBeUpdated = await context.Applications.FindAsync(parameters.EmailId);
             var currentLoggedUser = await userManager.FindByNameAsync(parameters.LoggedUserUsername);
-            var listOfPermittedStatuses = await ReturnPermitedUpdates(emailToBeUpdated.ApplicationStatus, currentLoggedUser);         
+            var listOfPermittedStatuses = await ReturnPermitedUpdates(emailToBeUpdated.ApplicationStatus, currentLoggedUser);
 
             if (!listOfPermittedStatuses.Contains(parameters.NewStatus)) return false;
 
-            var permitionGranted = await IsTheLoggedUserPermitedToUpdateTheEmail(currentLoggedUser,emailToBeUpdated);
+            var permitionGranted = await IsTheLoggedUserPermitedToUpdateTheEmail(currentLoggedUser, emailToBeUpdated);
             if (permitionGranted)
             {
                 await UpdateApplication(parameters.NewStatus, emailToBeUpdated, currentLoggedUser);
-                if (parameters.NewStatus== ApplicationStatus.Open.ToString())
+                if (parameters.NewStatus == ApplicationStatus.Open.ToString())
                 {
-                var success = await UpdateApplicationProperties(parameters.PhoneNumber, parameters.EGN, emailToBeUpdated);
-                if (!success) return false;
+                    var success = await UpdateApplicationProperties(parameters.PhoneNumber, parameters.EGN, emailToBeUpdated);
+
+                    if (!success) return false;
                 }
+                if (emailToBeUpdated.ApplicationStatus == ApplicationStatus.Accepted)
+                   await this.IssueAccount(emailToBeUpdated.Email, emailToBeUpdated.Phone, emailToBeUpdated.EGN, parameters.FullName);
+
                 emailToBeUpdated.LastChange = DateTime.Now;
                 await context.SaveChangesAsync(currentLoggedUser);
                 return true;
@@ -96,12 +100,9 @@ namespace TBIProject.Services.Implementation
                     return new List<string> { nameof(ApplicationStatus.Open) };
 
                 if (currentStatus == ApplicationStatus.Open)
-                    return new List<string> { nameof(ApplicationStatus.New), nameof(ApplicationStatus.Closed) };
+                    return new List<string> { nameof(ApplicationStatus.Accepted), nameof(ApplicationStatus.Rejected) };
 
-                if (currentStatus == ApplicationStatus.Open)
-                    return new List<string> { nameof(ApplicationStatus.Closed) };
-
-                if (currentStatus == ApplicationStatus.Closed)
+                if (currentStatus == ApplicationStatus.Rejected)
                     return new List<string> { nameof(ApplicationStatus.New) };
             }
             if (await userManager.IsInRoleAsync(currentUser, "Operator"))
@@ -113,52 +114,90 @@ namespace TBIProject.Services.Implementation
                     return new List<string> { nameof(ApplicationStatus.Open) };
 
                 if (currentStatus == ApplicationStatus.Open)
-                    return new List<string> { nameof(ApplicationStatus.Closed) };
+                    return new List<string> { nameof(ApplicationStatus.Accepted), nameof(ApplicationStatus.Rejected)};
             }
 
             return null;
         }
 
-        private async Task<bool> IsTheLoggedUserPermitedToUpdateTheEmail(User currentUser,Application selectedEmail)
+        private async Task<bool> IsTheLoggedUserPermitedToUpdateTheEmail(User currentUser, Application selectedEmail)
         {
             if (await userManager.IsInRoleAsync(currentUser, "Manager")) return true;
 
-            if (selectedEmail.OperatorId == null||selectedEmail.OperatorId==currentUser.Id)
+            if (selectedEmail.OperatorId == null || selectedEmail.OperatorId == currentUser.Id)
             {
                 return true;
             }
             return false;
         }
 
-        private async Task UpdateApplication(string newStatus, Application selectedEmail,User currentUser)
+        private async Task UpdateApplication(string newStatus, Application selectedEmail, User currentUser)
         {
-            if (selectedEmail.OperatorId==null&&selectedEmail.ApplicationStatus==ApplicationStatus.NotReviewed)
+            if (selectedEmail.OperatorId == null && selectedEmail.ApplicationStatus == ApplicationStatus.NotReviewed)
             {
                 selectedEmail.OperatorId = currentUser.Id;
-            }        
+            }
 
             ApplicationStatus myStatus;
             Enum.TryParse(newStatus, out myStatus);
             selectedEmail.ApplicationStatus = myStatus;
-            // Log changes
-            
+
         }
 
-        private async Task<bool> UpdateApplicationProperties(string phone,string egn,Application app)
+        private async Task<bool> UpdateApplicationProperties(string phone, string egn, Application app)
         {
-            var isEgnValid=await validator.ValidateEGN(egn);
-            
+            var isEgnValid = await validator.ValidateEGN(egn);
+
             var isPhoneValid = await validator.ValidatePhone(phone);
 
-            if (isEgnValid&&isPhoneValid)
+            if (isEgnValid && isPhoneValid)
             {
                 app.EGN = encrypter.Encrypt(egn);
-                app.Phone = encrypter.Encrypt(phone);                
+                app.Phone = encrypter.Encrypt(phone);
                 return true;
             }
             return false;
         }
-       
 
+        private async Task<bool> IssueAccount(string email, string phoneNumber, string egn, string fullName)
+        {
+            if (string.IsNullOrEmpty(email)) throw new ArgumentNullException("Not a valid email address");
+
+            var password = this.GeneratePassword();
+
+            var user = new User
+            {
+                Email = email,
+                UserName = email,
+                PhoneNumber = phoneNumber,
+                EGN = egn,
+                FullName = fullName,
+                HasChangedPassword = false
+            };
+
+            await this.userManager.CreateAsync(user, password);
+
+            await this.context.SaveChangesAsync();
+
+            return true;
+        }
+
+        private string GeneratePassword()
+        {
+            var password = new StringBuilder(Guid.NewGuid().ToString());
+
+            password.Append("$123");
+
+            for (int i = 0; i < password.Length; i++)
+            {
+                if (Char.IsLetter(password[i]))
+                {
+                    password[i] = Char.ToUpper(password[i]);
+                    break;
+                }
+            }
+
+            return password.ToString();
+        }
     }
 }

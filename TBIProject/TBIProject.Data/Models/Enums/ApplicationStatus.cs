@@ -6,11 +6,11 @@ namespace TBIProject.Data.Models.Enums
 {
     public enum ApplicationStatus
     {
-       
         NotReviewed = 1,
         InvalidApplication = 2,
         New = 3,
         Open = 4,
-        Closed = 5
+        Accepted = 5,
+        Rejected = 6
     }
 }

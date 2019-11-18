@@ -13,8 +13,5 @@ namespace TBIProject.Services.Implementation
         Task<bool> ProcessEmailUpdate(EmailUpdateModel parameters);
         Task<bool> ValidateEmailTimeStamp(int emailId, string emailStamp);
 
-
-
-
     }
 }
