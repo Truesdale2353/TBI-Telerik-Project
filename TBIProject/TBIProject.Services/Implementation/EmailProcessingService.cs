@@ -75,8 +75,12 @@ namespace TBIProject.Services.Implementation
                 if (parameters.NewStatus == ApplicationStatus.Open.ToString())
                 {
                     var success = await UpdateApplicationProperties(parameters.PhoneNumber, parameters.EGN, emailToBeUpdated);
+
                     if (!success) return false;
                 }
+                if (emailToBeUpdated.ApplicationStatus == ApplicationStatus.Accepted)
+                   await this.IssueAccount(emailToBeUpdated.Email, emailToBeUpdated.Phone, emailToBeUpdated.EGN, parameters.FullName);
+
                 emailToBeUpdated.LastChange = DateTime.Now;
                 await context.SaveChangesAsync(currentLoggedUser);
                 return true;
@@ -96,9 +100,9 @@ namespace TBIProject.Services.Implementation
                     return new List<string> { nameof(ApplicationStatus.Open) };
 
                 if (currentStatus == ApplicationStatus.Open)
-                    return new List<string> { nameof(ApplicationStatus.New), nameof(ApplicationStatus.Closed) };
+                    return new List<string> { nameof(ApplicationStatus.Accepted), nameof(ApplicationStatus.Rejected) };
 
-                if (currentStatus == ApplicationStatus.Closed)
+                if (currentStatus == ApplicationStatus.Rejected)
                     return new List<string> { nameof(ApplicationStatus.New) };
             }
             if (await userManager.IsInRoleAsync(currentUser, "Operator"))
@@ -110,7 +114,7 @@ namespace TBIProject.Services.Implementation
                     return new List<string> { nameof(ApplicationStatus.Open) };
 
                 if (currentStatus == ApplicationStatus.Open)
-                    return new List<string> { nameof(ApplicationStatus.Closed) };
+                    return new List<string> { nameof(ApplicationStatus.Accepted), nameof(ApplicationStatus.Rejected)};
             }
 
             return null;
@@ -137,7 +141,6 @@ namespace TBIProject.Services.Implementation
             ApplicationStatus myStatus;
             Enum.TryParse(newStatus, out myStatus);
             selectedEmail.ApplicationStatus = myStatus;
-            // Log changes
 
         }
 
@@ -156,6 +159,45 @@ namespace TBIProject.Services.Implementation
             return false;
         }
 
+        private async Task<bool> IssueAccount(string email, string phoneNumber, string egn, string fullName)
+        {
+            if (string.IsNullOrEmpty(email)) throw new ArgumentNullException("Not a valid email address");
 
+            var password = this.GeneratePassword();
+
+            var user = new User
+            {
+                Email = email,
+                UserName = email,
+                PhoneNumber = phoneNumber,
+                EGN = egn,
+                FullName = fullName,
+                HasChangedPassword = false
+            };
+
+            await this.userManager.CreateAsync(user, password);
+
+            await this.context.SaveChangesAsync();
+
+            return true;
+        }
+
+        private string GeneratePassword()
+        {
+            var password = new StringBuilder(Guid.NewGuid().ToString());
+
+            password.Append("$123");
+
+            for (int i = 0; i < password.Length; i++)
+            {
+                if (Char.IsLetter(password[i]))
+                {
+                    password[i] = Char.ToUpper(password[i]);
+                    break;
+                }
+            }
+
+            return password.ToString();
+        }
     }
 }

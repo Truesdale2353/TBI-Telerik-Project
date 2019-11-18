@@ -17,5 +17,9 @@ namespace TBIProject.Models.EmailModels
         public string PhoneNumber { get; set; }
         public string EGN { get; set; }
 
+        public string FullName { get; set; }
+
+        public decimal Amount { get; set; }
+
     }
 }
