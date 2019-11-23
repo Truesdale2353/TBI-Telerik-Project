@@ -3,21 +3,18 @@
     ViewData["Title"] = "BrowseEmails";
 }
 
-    <p  id="dds" >kdsaidasd</p>
     <div class="content">
 
         <input type="hidden" id="multuplier" value="2" />
         <input type="hidden" id="searchBy" value="@Model.currentSearchFilter" />
 
         <table class="table table-hover" id="tableData" style="background-color: white;  margin: auto;
-            width: 65%;
+            width: 70%;
             padding: 10px;
             margin-top:70px">
-            <thead>
+            <thead >
                 <tr id="table-header">
-                    <th scope="col">
-                        ID
-                    </th>
+                    <th scope="col">ID </th> 
                     <th scope="col">Email sender</th>
                     <th scope="col"> Email status</th>
                     <th scope="col">
@@ -36,7 +33,7 @@
                             </div>
                         </div>
                     </th>
-                </tr>
+                </trid="table-header">
             </thead>
             
             <tbody id="table-body">
@@ -48,7 +45,7 @@
 
                         <tr onclick="window.location='/EmailInfo/GetEmailInfo?emailId=@email.EmailId'">
                             <th scope="row">
-                                <p>@email.EmailId</p>
+                                <p> @email.EmailId</p>
                             </th>
                             <td>@email.EmailSender</td>
                             <td>@email.EmailStatus</td>
@@ -69,5 +66,6 @@
 
             </tbody>
         </table>
+        <div class="bottom-tier"></div>
         
     </div>

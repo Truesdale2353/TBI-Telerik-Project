@@ -45,18 +45,19 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
-.footer {
+/*.footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
-  /* Set the fixed height of the footer here */
+ 
   height: 60px;
-  line-height: 60px; /* Vertically center the text there */
-}
+
+}*/
 /* custom made stuff*/
 body {
     background-image: url('resource/bcr.png');
+    padding-bottom: 100px;
 }
 
 #tabledata th {
@@ -69,6 +70,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+
 }
 
 
@@ -79,14 +81,27 @@ tr {
 td {
     width: 33.33%;
 }
-    
+
 .footer {
-    position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
     background-color: white;
-    height: 10%;
+    height: 60px;
     color: #4a4a49;
     text-align: left;
+    position: absolute;
+    white-space: nowrap;
+    bottom: 0;
+    width: 100%;
+    clear:both;
+    margin-top:auto;
+    display:table-row;
 }
+#bottom-tier{
+    margin-top:20px;
+    
+    padding-bottom:201123px;
+}
+
+

@@ -17,13 +17,13 @@
             success: function (response) {
                 console.log(response.length);
                 for (let i = 0; i < response.length; i++) {   
-                    let u = response[i].emailSender;
+                    
                     $("#table-body").append(
                         " <tr onclick=\"window.location='/EmailInfo/GetEmailInfo?emailId=" + response[i].emailId + "'\">"
                         + " <th scope='row'>"
                         + "<p>" + response[i].emailId + "</p>"
                         + " </th>"
-                        + " <td>"+ u+"</td>"
+                        + " <td>" + response[i].emailSender+"</td>"
                         + "<td>" + response[i].emailStatus + "</td>"
                         + " <td>" + response[i].emailreceived + "</td>"
                         + " </tr>"
