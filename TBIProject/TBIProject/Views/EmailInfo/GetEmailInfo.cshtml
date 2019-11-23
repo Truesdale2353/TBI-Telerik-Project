@@ -3,45 +3,89 @@
     ViewData["Title"] = "GetEmailInfo";
 }
 
-<h1>GetEmailInfo</h1>
-
-<p>@Model.EmailId</p>
-<p>@Model.Emailreceived</p>
-<p>@Model.EmailSender</p>
-<p>@Model.Body</p>
-<p>@Model.OperatorId</p>
 <h2 class="alert">@TempData["executionMessage"]</h2>
 @if (Model.AllowedToWork)
 {
-<form name="emailUpdate" action="/EmailInfo/UpdateEmail" method="post" onsubmit="return validateForm(this)">
+    <div class="content">
+        <div class="card" style="background-color: white;  margin: auto;
+        width: 65%;
+        padding: 0px;
+        margin-top:70px">
+            <div class="card-header">
+                <h5>Email info of email <span class="text-right">@Model.EmailId</span></h5>
 
-    <input type="hidden" name="EmailId" value="@Model.EmailId" />
-    <input type="hidden" name="CurrentDataStamp" value="@Model.CurrentDataTimeStamp" />
+            </div>
+            <div class="card-body">
+                <div class="card-title">
+                    <img src="~/css/resource/29213222-stock-vector-male-silhouette-avatar-profile-picture.png" alt="" style="float: left; margin-right:25px">
+                    <h5 class="">Sent by:@Model.EmailSender</h5>
+                </div>
+                <div class="card-subtitle" style="display: inline-flex; color:rgb(150, 146, 146)">
 
-    @if (Model.PermitedOperations != null)
-    {
-<p class="alert-info">Currently the application's status is @Model.EmailStatus</p>
-        @foreach (var operation in Model.PermitedOperations)
-        {
-            if (operation == Model.EmailStatus.ToString())
-            {
-                continue;
-            }
-            <input type="radio" class="newStat" name="NewStatus" id="new-status" value="@operation">@operation<br />
+                    <p>Operator Id:@Model.OperatorId</p>
+                </div>
+                <p class="card-body">
+                    @Model.Body
+                </p>
+
+                @if (Model.PermitedOperations != null)
+                {
+                    <form name="emailUpdate" action="/EmailInfo/UpdateEmail" method="post" onsubmit="return validateForm(this)">
+
+                        <input type="hidden" name="EmailId" value="@Model.EmailId" />
+                        <input type="hidden" name="CurrentDataStamp" value="@Model.CurrentDataTimeStamp" />
+                        @foreach (var operation in Model.PermitedOperations)
+                        {
+                            if (operation == Model.EmailStatus.ToString())
+                            {
+                                continue;
+                            }
+                            <input type="radio" class="newStat" name="NewStatus" id="new-status" value="@operation">@operation<br />
+                        }
+                        <div name="dataHolder" id="data-holder">    </div>
+                        <button type="submit" class="btn btn-warning btn-sm">Submit</button>
+                    </form>
+                }
+                else
+                {
+                    <p>@Model.EmailStatus</p>
+                }
+
+
+
+            </div>
+        </div>
+        </div>
         }
-    }
-    else
-    {
-        <p>@Model.EmailStatus</p>
-    }
+        @*<form name="emailUpdate" action="/EmailInfo/UpdateEmail" method="post" onsubmit="return validateForm(this)">
 
-<div name="dataHolder" id="data-holder">    </div>
+                <input type="hidden" name="EmailId" value="@Model.EmailId" />
+                <input type="hidden" name="CurrentDataStamp" value="@Model.CurrentDataTimeStamp" />
+
+                @if (Model.PermitedOperations != null)
+                {
+            <p class="alert-info">Currently the application's status is @Model.EmailStatus</p>
+                    @foreach (var operation in Model.PermitedOperations)
+                    {
+                        if (operation == Model.EmailStatus.ToString())
+                        {
+                            continue;
+                        }
+                        <input type="radio" class="newStat" name="NewStatus" id="new-status" value="@operation">@operation<br />
+                    }
+                }
+                else
+                {
+                    <p>@Model.EmailStatus</p>
+                }
+
+            <div name="dataHolder" id="data-holder">    </div>
 
 
-    <input class="badge-primary" type="submit" value="Submit">
-</form>
-}
-else
-{
-    <p>@Model.EmailStatus</p>
-}
+                <input class="badge-primary" type="submit" value="Submit">
+            </form>
+            }
+            else
+            {
+                <p>@Model.EmailStatus</p>
+            }*@

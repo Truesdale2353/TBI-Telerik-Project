@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TBIProject.Data.Models;
+using TBIProject.Data.Models.Enums;
 using TBIProject.Models.EmailModels;
 using TBIProject.Services.Contracts;
 using TBIProject.Services.Implementation;
@@ -34,8 +35,12 @@ namespace TBIProject.Controllers
                 EmailSender = e.EmailSender,
                 EmailStatus = e.EmailStatus           
             }) ;
+            var emailListModel = new EmailListModel(applications.ToList());
+            var stringedEnum = (ApplicationStatus)filter;
+            emailListModel.currentSearchFilter = stringedEnum.ToString();
 
-            return View(new EmailListModel(applications.ToList()));
+
+            return View(emailListModel);
         }
 
     }
