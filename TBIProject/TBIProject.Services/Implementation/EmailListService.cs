@@ -23,17 +23,22 @@ namespace TBIProject.Services.Implementation
             this.context = context;
             this.encrypter = encrypter;
         }
-        public async Task<List<EmailServiceModel>> ListEmails(int filter)
+        public async Task<List<EmailServiceModel>> ListEmails(int filter,int multyplier)
+
         {
+            var currentListedEmails = (multyplier - 1) * 10;
+            var emailsToBeListed = multyplier * 10;
             var app = new List<Application>();
 
             if (filter!=0)
             {
-            app = context.Applications.Where(f=>f.ApplicationStatus==(ApplicationStatus)filter).ToList();
+                // app = context.Applications.Where(f=>f.ApplicationStatus==(ApplicationStatus)filter).ToList();
+                app = context.Applications.Where(f => f.ApplicationStatus == (ApplicationStatus)filter)
+                    .OrderBy(d=>d.Id).Skip(currentListedEmails).Take(emailsToBeListed).ToList();
             }
             else
             {
-                app = context.Applications.ToList();
+                app = context.Applications.OrderBy(d => d.Id).Skip(currentListedEmails).Take(emailsToBeListed).ToList();
             }               
 
             var applications = app.Select(b => new EmailServiceModel

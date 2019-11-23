@@ -27,12 +27,12 @@ namespace TBIProject.Controllers
         public async Task<IActionResult> BrowseEmails(int filter)
         {
 
-            var emails = await service.ListEmails(filter);
+            var emails = await service.ListEmails(filter,1);
             var applications = emails.Select(e => new EmailViewModel
             {
                 EmailId = e.EmailId,
                 Emailreceived = e.Emailreceived,
-                EmailSender = e.EmailSender,
+                EmailSender = e.EmailSender.Substring(1, e.EmailSender.Length - 2),
                 EmailStatus = e.EmailStatus           
             }) ;
             var emailListModel = new EmailListModel(applications.ToList());
@@ -42,6 +42,20 @@ namespace TBIProject.Controllers
 
             return View(emailListModel);
         }
+        public async Task<IActionResult> AppendEmails(int filter,int multyplier)
+        {
 
+            var emails = await service.ListEmails(filter,multyplier);
+            var applications = emails.Select(e => new EmailAppendViewModel
+            {
+                EmailId = e.EmailId,
+                Emailreceived = e.Emailreceived.ToString(),
+                EmailSender = e.EmailSender.Substring(1,e.EmailSender.Length-2),
+                EmailStatus = e.EmailStatus.ToString()
+            });
+            
+            
+            return new JsonResult(applications.ToList());
+        }
     }
 }

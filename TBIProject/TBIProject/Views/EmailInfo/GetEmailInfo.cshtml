@@ -57,35 +57,5 @@
         </div>
         </div>
         }
-        @*<form name="emailUpdate" action="/EmailInfo/UpdateEmail" method="post" onsubmit="return validateForm(this)">
 
-                <input type="hidden" name="EmailId" value="@Model.EmailId" />
-                <input type="hidden" name="CurrentDataStamp" value="@Model.CurrentDataTimeStamp" />
-
-                @if (Model.PermitedOperations != null)
-                {
-            <p class="alert-info">Currently the application's status is @Model.EmailStatus</p>
-                    @foreach (var operation in Model.PermitedOperations)
-                    {
-                        if (operation == Model.EmailStatus.ToString())
-                        {
-                            continue;
-                        }
-                        <input type="radio" class="newStat" name="NewStatus" id="new-status" value="@operation">@operation<br />
-                    }
-                }
-                else
-                {
-                    <p>@Model.EmailStatus</p>
-                }
-
-            <div name="dataHolder" id="data-holder">    </div>
-
-
-                <input class="badge-primary" type="submit" value="Submit">
-            </form>
-            }
-            else
-            {
-                <p>@Model.EmailStatus</p>
-            }*@
+<div class="clearfix"></div>
