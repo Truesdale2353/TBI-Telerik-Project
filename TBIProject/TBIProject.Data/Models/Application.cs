@@ -22,6 +22,10 @@ namespace TBIProject.Data.Models
 
         public string Body { get; set; }
 
+        public int AttachmentsCount { get; set; }
+
+        public int AttachmentSize { get; set; }
+
         public string EGN { get; set; }
 
         public string Phone { get; set; }
