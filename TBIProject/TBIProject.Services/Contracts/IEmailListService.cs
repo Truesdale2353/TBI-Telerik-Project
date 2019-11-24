@@ -8,6 +8,6 @@ namespace TBIProject.Services.Contracts
     {
         Task<List<EmailServiceModel>> ListEmails(int filter, int multyplier);
 
-        Task AddNewlyReceivedMessage(string gmailId, string body, string senderEmail);
+        Task AddNewlyReceivedMessage(string gmailId, string body, string senderEmail, ICollection<int> attachmentData);
     }
 }
