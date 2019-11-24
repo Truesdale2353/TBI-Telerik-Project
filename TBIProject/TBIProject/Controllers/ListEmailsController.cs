@@ -33,7 +33,9 @@ namespace TBIProject.Controllers
                 EmailId = e.EmailId,
                 Emailreceived = e.Emailreceived,
                 EmailSender = e.EmailSender.Substring(1, e.EmailSender.Length - 2),
-                EmailStatus = e.EmailStatus           
+                EmailStatus = e.EmailStatus,
+                Attachments=e.Attachments
+                
             }) ;
             var emailListModel = new EmailListModel(applications.ToList());
             var stringedEnum = (ApplicationStatus)filter;
@@ -51,7 +53,8 @@ namespace TBIProject.Controllers
                 EmailId = e.EmailId,
                 Emailreceived = e.Emailreceived.ToString(),
                 EmailSender = e.EmailSender.Substring(1,e.EmailSender.Length-2),
-                EmailStatus = e.EmailStatus.ToString()
+                EmailStatus = e.EmailStatus.ToString(),
+                Attachments=e.Attachments
             });
             
             

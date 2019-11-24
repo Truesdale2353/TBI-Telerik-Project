@@ -47,9 +47,9 @@
             <tr onclick="window.location='/EmailInfo/GetEmailInfo?emailId=@email.EmailId'">
                 <th scope="row">
                     @email.EmailId
-                    @if (email.Attachments == true)
+                    @if (email.Attachments !=0)
                     {
-                        <img src="~/css/resource/Ellipse 1.png" />
+                        <img src="~/css/resource/Ellipse1.png" />
                     }
                 </th>
                 <td>@email.EmailSender</td>

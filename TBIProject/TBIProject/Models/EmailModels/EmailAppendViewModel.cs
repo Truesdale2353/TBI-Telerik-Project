@@ -11,6 +11,6 @@ namespace TBIProject.Models.EmailModels
         public string Emailreceived { get; set; }
         public string EmailSender { get; set; }
         public string EmailStatus { get; set; }
-        public bool Attachments { get; set; }
+        public int Attachments { get; set; }
     }
 }

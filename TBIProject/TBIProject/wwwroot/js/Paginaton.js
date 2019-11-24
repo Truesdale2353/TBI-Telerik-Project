@@ -17,15 +17,16 @@
             success: function (response) {
                 console.log(response.length);
                 for (let i = 0; i < response.length; i++) {
-                    let attached = "<p>" + response[i].emailId;
-                    if (true == true) {
-                        attached +="<img src=\"~/css/resource/Ellipse 1.png\" />"
+                    let attached = "";
+                    if (response[i].attachments !=0) {
+                        attached +="<img src='/css/resource/Ellipse1.png'>"
                     }
                    
                     $("#table-body").append(
                         " <tr onclick=\"window.location='/EmailInfo/GetEmailInfo?emailId=" + response[i].emailId + "'\">"
-                        + " <th scope='row'>"   
-                        + attached + "</p>"
+                        + " <th scope='row'>"  
+                        + response[i].emailId
+                        + attached 
                         + " </th>"
                         + " <td>" + response[i].emailSender + "</td>"
                         + "<td>" + response[i].emailStatus + "</td>"

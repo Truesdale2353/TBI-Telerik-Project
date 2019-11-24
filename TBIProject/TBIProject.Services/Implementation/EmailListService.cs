@@ -47,6 +47,7 @@ namespace TBIProject.Services.Implementation
                 Emailreceived = b.Received,
                 EmailSender = encrypter.Decrypt(b.Email),
                 EmailStatus = b.ApplicationStatus,
+                Attachments=b.AttachmentsCount,
                 
             });
             return applications.ToList();
