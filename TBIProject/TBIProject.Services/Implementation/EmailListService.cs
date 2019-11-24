@@ -52,7 +52,7 @@ namespace TBIProject.Services.Implementation
             return applications.ToList();
         }
 
-        public async Task AddNewlyReceivedMessage(string gmailId, string body, string senderEmail)
+        public async Task AddNewlyReceivedMessage(string gmailId, string body, string senderEmail, ICollection<int> attachmentData)
         {
             if (await this.context.Applications.AnyAsync(u => u.GmailId == gmailId)) return;
 
@@ -63,7 +63,9 @@ namespace TBIProject.Services.Implementation
                 Email = encrypter.Encrypt(senderEmail),
                 Received = DateTime.UtcNow,
                 ApplicationStatus = ApplicationStatus.NotReviewed,
-                LastChange = DateTime.UtcNow
+                LastChange = DateTime.UtcNow,
+                AttachmentSize = attachmentData.Take(1).First(),
+                AttachmentsCount = attachmentData.Skip(1).Take(1).First()
             };
 
             await this.context.Applications.AddAsync(app);

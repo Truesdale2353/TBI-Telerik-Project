@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TBIProject.Common.Constants;
 using TBIProject.Services.Contracts;
 
 namespace TBIProject.Services.Implementation
@@ -53,11 +54,22 @@ namespace TBIProject.Services.Implementation
 
         public async Task<string> GetMessageBodyAsync(Message message)
         {
-            var base64Message = Convert.FromBase64String(message.Payload.Parts[0].Body.Data.Replace("-", "+").Replace("_", "/"));
+            if (message.Payload.Parts[0].Body.Data != null)
+            {
+                var base64Message = Convert.FromBase64String(message.Payload.Parts[0].Body.Data?.Replace("-", "+").Replace("_", "/"));
 
-            var resultMessage = Encoding.UTF8.GetString(base64Message);
+                var resultMessage = Encoding.UTF8.GetString(base64Message);
 
-            return resultMessage;
+                return resultMessage;
+            }
+            else
+            {
+                var base64Message = Convert.FromBase64String(message.Payload.Parts[0].Parts[0].Body.Data?.Replace("-", "+").Replace("_", "/"));
+
+                var resultMessage = Encoding.UTF8.GetString(base64Message);
+
+                return resultMessage;
+            }
         }
 
         public async Task<IEnumerable<Message>> GetMessagesAsync(string query, string email)
@@ -96,7 +108,7 @@ namespace TBIProject.Services.Implementation
 
             var sendMessage = new Message { Raw = encodedMessage };
 
-          return await this.emailService.Users.Messages.Send(sendMessage, "telerik.tbi@gmail.com").ExecuteAsync();
+            return await this.emailService.Users.Messages.Send(sendMessage, "telerik.tbi@gmail.com").ExecuteAsync();
         }
 
         private string BuildMessage(string email, string message, string subject)
@@ -109,6 +121,32 @@ namespace TBIProject.Services.Implementation
             newMessage.AppendLine(message);
 
             return newMessage.ToString();
+        }
+
+        public async Task<IEnumerable<int>> GetAttachmentsAsync(Message message)
+        {
+            var parts = message.Payload.Parts;
+
+            var totalSize = 0;
+
+            var countOfAttachmenets = 0;
+
+            foreach (MessagePart part in parts)
+            {
+                if (!string.IsNullOrEmpty(part.Filename))
+                {
+                    var attId = part.Body.AttachmentId;
+                    MessagePartBody attachPart = await this.emailService.Users.Messages.Attachments.Get(EmailConstants.EMAIL_ADDRESS, message.Id, attId).ExecuteAsync();
+
+                    if (attachPart != null)
+                    {
+                        totalSize += (int)attachPart.Size;
+                        countOfAttachmenets++;
+                    }
+                }
+            }
+
+            return new List<int> { totalSize, countOfAttachmenets };
         }
     }
 }

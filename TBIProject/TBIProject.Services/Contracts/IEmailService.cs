@@ -21,5 +21,7 @@ namespace TBIProject.Services.Contracts
         Task<string> GetMessageEmailSenderAsync(Message message);
 
         Task<Message> SendMessageAsync(string email, string message, string subject);
+
+        Task<IEnumerable<int>> GetAttachmentsAsync(Message message);
     }
 }
