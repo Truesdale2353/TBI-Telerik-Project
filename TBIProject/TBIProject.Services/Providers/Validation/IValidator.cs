@@ -6,5 +6,8 @@ namespace TBIProject.Services.Providers.Validation
     {
         Task<bool> ValidatePhone(string phone);
         Task<bool> ValidateEGN(string egn);
+        Task<bool> ValidateName(string fullName);
+       
+
     }
 }

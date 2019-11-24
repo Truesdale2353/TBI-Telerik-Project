@@ -1,28 +1,52 @@
 ﻿function validateForm() {
     let formPassed = true;
-    
+
     let egn = $("#EGN").val();
     let phoneNumber = $("#phone").val()
-    let d = checkEgn(egn);
-    if (!(/^((359)|(\+359)|(0)){1}[\d]{9,11}$/.test(phoneNumber)))
-    {        
-        document.getElementById("phoneAlert").innerHTML = "Invalid phone number";
-        formPassed = false;
-    }
-    else {
-        document.getElementById("phoneAlert").innerHTML = "";
-    }
-    if (d === false) {
-       
-        document.getElementById("EGNAlert").innerHTML = "Invalid EGN";
-        formPassed = false;
-    }
-    else {
-        document.getElementById("EGNAlert").innerHTML = "";
+    if (egn != undefined && phoneNumber != undefined) {
+
+
+        let d = checkEgn(egn);
+        if (!(/^((359)|(\+359)|(0)){1}[\d]{9,11}$/.test(phoneNumber))) {
+            document.getElementById("phoneAlert").innerHTML = "Invalid phone number";
+            formPassed = false;
+        }
+        else {
+            document.getElementById("phoneAlert").innerHTML = "";
+        }
+        if (d === false) {
+
+            document.getElementById("EGNAlert").innerHTML = "Invalid EGN";
+            formPassed = false;
+        }
+        else {
+            document.getElementById("EGNAlert").innerHTML = "";
+        }
     }
 
+    let name = $("#FullName").val();
+    let amount = $("#Amount").val();
+    if (name != undefined && amount != undefined) {
+
+
+        if (!(/^[a-zA-Z\s]*$/.test(name))||name==="") {
+            document.getElementById("FullNameAlert").innerHTML = "Invalid Name";
+            formPassed = false;
+        }
+        else {
+            document.getElementById("FullNameAlert").innerHTML = "";
+        }
+
+        if (!/^(?=.*\d)[\d ]+$/.test(amount)) {
+
+            document.getElementById("amountAlert").innerHTML = "Amount must contain only numbers";
+            formPassed = false;
+        }
+        else {
+            document.getElementById("amountAlert").innerHTML = "";
+        }
+    }
     return formPassed;
-    
 }
 
 $(".newStat").change(function () {

@@ -74,6 +74,16 @@ namespace TBIProject.Services.Providers.Validation
             var date = new DateTime(y, m - 1, d);
             return (date.Month + 1) == m && date.Day == d;
         }
+       
+
+        public async Task<bool> ValidateName(string fullName)
+        {
+            if (string.IsNullOrEmpty(fullName)) return false;
+
+            var result = Regex.Match(fullName, @"^[a-zA-Z ]*$");
+            return result.Success;
+        }
+
 
     }
 

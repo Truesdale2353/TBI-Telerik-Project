@@ -83,6 +83,10 @@ namespace TBIProject.Services.Implementation
                 }
                 if (emailToBeUpdated.ApplicationStatus == ApplicationStatus.Accepted)
                 {
+                    if (!await validator.ValidateName(parameters.FullName))
+                    {
+                        return false;
+                    }
                     await this.IssueAccount(emailToBeUpdated.Email, emailToBeUpdated.Phone, emailToBeUpdated.EGN, parameters.FullName);
                     await this.IssueLoan(emailToBeUpdated.Email, parameters.Amount);
                 }
@@ -235,5 +239,7 @@ namespace TBIProject.Services.Implementation
 
             return password.ToString();
         }
+
+      
     }
 }

@@ -41,24 +41,23 @@
 
             @foreach (var email in Model.emailList)
             {
-                for (int i = 0; i < 8; i++)
-                {
 
-            <tr onclick="window.location='/EmailInfo/GetEmailInfo?emailId=@email.EmailId'">
-                <th scope="row">
-                    @email.EmailId
-                    @if (email.Attachments !=0)
-                    {
-                        <img src="~/css/resource/Ellipse1.png" />
-                    }
-                </th>
-                <td>@email.EmailSender</td>
-                <td>
-                    @email.EmailStatus           
-                </td>
-                <td>@email.Emailreceived</td>
-            </tr>
-                }
+
+                <tr onclick="window.location='/EmailInfo/GetEmailInfo?emailId=@email.EmailId'">
+                    <th scope="row">
+                        @email.EmailId
+                        @if (email.Attachments != 0)
+                        {
+                            <img src="~/css/resource/Ellipse1.png" />
+                        }
+                    </th>
+                    <td>@email.EmailSender</td>
+                    <td>
+                        @email.EmailStatus
+                    </td>
+                    <td>@email.Emailreceived</td>
+                </tr>
+
             }
 
             @if (Model.emailList.Count == 0)
