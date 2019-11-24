@@ -21,10 +21,14 @@
                     <h5 class="">Sent by:@Model.EmailSender</h5>
                 </div>
                 <div class="card-subtitle" style="display: inline-flex; color:rgb(150, 146, 146)">
-
-                    <p>Operator Id:@Model.OperatorId</p>
+                    <p>Operator Id:@Model.OperatorId</p><br />
                 </div>
-                <p class="card-body">
+                <div class="card-columns" style="color:rgb(150, 146, 146)">
+                    <p>Current status <b>@Model.EmailStatus</b> </p>
+                </div>
+          
+
+                <p class="card-body" style="display: inline-block;">
                     @Model.Body
                 </p>
 

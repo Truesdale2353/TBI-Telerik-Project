@@ -12,5 +12,6 @@ namespace TBIProject.Models.EmailModels
         public DateTime Emailreceived { get; set; }
         public string EmailSender { get; set; }
         public ApplicationStatus EmailStatus { get; set; }
+        public bool Attachments { get; set; }
     }
 }

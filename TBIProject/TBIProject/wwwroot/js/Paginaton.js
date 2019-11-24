@@ -16,12 +16,16 @@
             data: data,
             success: function (response) {
                 console.log(response.length);
-                for (let i = 0; i < response.length; i++) {   
-                    
+                for (let i = 0; i < response.length; i++) {
+                    let attached = "<p>" + response[i].emailId;
+                    if (true == true) {
+                        attached +="<img src=\"~/css/resource/Ellipse 1.png\" />"
+                    }
+                   
                     $("#table-body").append(
                         " <tr onclick=\"window.location='/EmailInfo/GetEmailInfo?emailId=" + response[i].emailId + "'\">"
-                        + " <th scope='row'>"
-                        + "<p>" + response[i].emailId + "</p>"
+                        + " <th scope='row'>"   
+                        + attached + "</p>"
                         + " </th>"
                         + " <td>" + response[i].emailSender + "</td>"
                         + "<td>" + response[i].emailStatus + "</td>"

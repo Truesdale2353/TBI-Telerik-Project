@@ -3,71 +3,77 @@
     ViewData["Title"] = "BrowseEmails";
 }
 
-    <div class="content">
+<div class="content">
 
-        <input type="hidden" id="multuplier" value="2" />
-        <input type="hidden" id="searchBy" value="@Model.currentSearchFilter" />
+    <input type="hidden" id="multuplier" value="1" />
+    <input type="hidden" id="searchBy" value="@Model.currentSearchFilter" />
 
-        <table class="table table-hover" id="tableData" style="background-color: white;  margin: auto;
+    <table class="table table-hover" id="tableData" style="background-color: white;  margin: auto;
             width: 70%;
             padding: 10px;
             margin-top:70px">
-            <thead >
-                <tr id="table-header">
-                    <th scope="col">ID </th> 
-                    <th scope="col">Email sender</th>
-                    <th scope="col"> Email status</th>
-                    <th scope="col">
-                        <div class="dropdown">
-                            <button style="margin-left:30px" class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                @if (Model.currentSearchFilter == "0") { Model.currentSearchFilter = "List All"; }
-                                @Model.currentSearchFilter
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="0">List All</a>
-                                <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="1">List Not Reviewed</a>
-                                <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="2">List Invalid Application</a>
-                                <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="3">List New</a>
-                                <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="4">List Open</a>
-                                <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="5">List Accepted</a>
-                                <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="6">List Rejected</a>
-                            </div>
+        <thead>
+            <tr id="table-header">
+                <th scope="col">ID </th>
+                <th scope="col">Email sender</th>
+                <th scope="col"> Email status</th>
+                <th scope="col">
+                    <div class="dropdown">
+                        <button style="margin-left:30px" class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @if (Model.currentSearchFilter == "0") { Model.currentSearchFilter = "List All"; }
+                            @Model.currentSearchFilter
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="0">List All</a>
+                            <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="1">List Not Reviewed</a>
+                            <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="2">List Invalid Application</a>
+                            <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="3">List New</a>
+                            <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="4">List Open</a>
+                            <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="5">List Accepted</a>
+                            <a class="dropdown-item" asp-controller="ListEmails" asp-action="BrowseEmails" asp-route-filter="6">List Rejected</a>
                         </div>
-                    </th>
-                </trid="table-header">
-            </thead>
-            
-            <tbody id="table-body">
+                    </div>
+                </th>
+            </tr>
+        </thead>
 
-                @foreach (var email in Model.emailList)
+        <tbody id="table-body">
+
+            @foreach (var email in Model.emailList)
+            {
+                for (int i = 0; i < 8; i++)
                 {
-                    for (int i = 0; i < 8; i++)
+
+            <tr onclick="window.location='/EmailInfo/GetEmailInfo?emailId=@email.EmailId'">
+                <th scope="row">
+                    @email.EmailId
+                    @if (email.Attachments == true)
                     {
-
-                        <tr onclick="window.location='/EmailInfo/GetEmailInfo?emailId=@email.EmailId'">
-                            <th scope="row">
-                                <p> @email.EmailId</p>
-                            </th>
-                            <td>@email.EmailSender</td>
-                            <td>@email.EmailStatus</td>
-                            <td>@email.Emailreceived</td>
-                        </tr>
+                        <img src="~/css/resource/Ellipse 1.png" />
                     }
+                </th>
+                <td>@email.EmailSender</td>
+                <td>
+                    @email.EmailStatus           
+                </td>
+                <td>@email.Emailreceived</td>
+            </tr>
                 }
+            }
 
-                @if (Model.emailList.Count == 0)
-                {
-                    <tr>
-                        <th></th>
-                        <th scope="row" colspan="3">
-                            No Emails with status @Model.currentSearchFilter have been found.
-                        </th>
-                    </tr>
-                }
+            @if (Model.emailList.Count == 0)
+            {
+                <tr>
+                    <th></th>
+                    <th scope="row" colspan="3">
+                        No Emails with status @Model.currentSearchFilter have been found.
+                    </th>
+                </tr>
+            }
 
-            </tbody>
-        </table>
+        </tbody>
+    </table>
 
-        <div class="bottom-tier"></div>
-        
-    </div>
+    <div class="bottom-tier"></div>
+
+</div>
