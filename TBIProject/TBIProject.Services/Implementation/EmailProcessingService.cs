@@ -136,6 +136,9 @@ namespace TBIProject.Services.Implementation
 
                 if (currentStatus == ApplicationStatus.Rejected)
                     return new List<string> { nameof(ApplicationStatus.New) };
+
+                if (currentStatus == ApplicationStatus.Accepted)
+                    return new List<string> { nameof(ApplicationStatus.New) };
             }
             if (await userManager.IsInRoleAsync(currentUser, "Operator"))
             {
