@@ -43,7 +43,7 @@ namespace TBIProject.Services.Implementation
 
             var applications = app.Select(b => new EmailServiceModel
             {
-                EmailId = b.Id,
+                EmailId = b.Id, 
                 Emailreceived = b.Received,
                 EmailSender = encrypter.Decrypt(b.Email),
                 EmailStatus = b.ApplicationStatus,
