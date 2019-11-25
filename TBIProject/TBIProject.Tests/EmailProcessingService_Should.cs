@@ -149,5 +149,55 @@ namespace TBIProject.Tests
                 Assert.AreEqual(true, executionResult);
             }
         }
+
+        [TestMethod]
+        public async Task ProcessEmailUpdateShouldReturnFalseWhenWrongStatusIsPassed()
+        {
+            var options = new DbContextOptionsBuilder<TBIContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null, null, null, null, null, null);
+
+            var encrypter = new Mock<IEncrypter>();
+            var validator = new Mock<IValidator>();
+            var emailService = new Mock<IEmailService>().Object;
+
+            var date = DateTime.Now;
+            var email = new Application
+            {
+                Id = 1,
+                Received = date,
+                Email = "kaloyan@abv.bg",
+                ApplicationStatus = ApplicationStatus.NotReviewed,
+                Body = "test text",
+                OperatorId = "1",
+                LastChange = date
+            };
+            var updateParameters = new EmailUpdateModel
+            {
+                EmailId = 1,
+                LoggedUserUsername = "testUser",
+                Amount = 23,
+                NewStatus = "Invalid status"
+            };
+
+            var user = new User { Id = "1", UserName = "testUser" };
+
+            userManager.Setup(g => g.FindByNameAsync("testUser")).Returns(Task.FromResult(user));
+            userManager.Setup(g => g.IsInRoleAsync(user, "Manager")).Returns(Task.FromResult(true));          
+
+            using (var arrangeContex = new TBIContext(options))
+            {
+                arrangeContex.Applications.Add(email);
+                await arrangeContex.SaveChangesAsync();
+            }
+            using (var assertContext = new TBIContext(options))
+            {
+                var sut = new EmailProcessingService(assertContext, encrypter.Object, userManager.Object, validator.Object, emailService);
+                var executionResult = await sut.ProcessEmailUpdate(updateParameters);
+                Assert.AreEqual(false, executionResult);
+             
+            }
+        }
     }
 }
