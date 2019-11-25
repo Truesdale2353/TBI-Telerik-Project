@@ -42,22 +42,20 @@ namespace TBIProject.Tests
                 ApplicationStatus = ApplicationStatus.NotReviewed,
                 Body = "test text",
                 OperatorId = "1",
-                LastChange=date
+                LastChange = date
             };
 
             var user = new User { Id = "1", UserName = "testUser" };
 
             userManager.Setup(g => g.FindByNameAsync("testUser")).Returns(Task.FromResult(user));
-            userManager.Setup(g => g.IsInRoleAsync(user,"Manager")).Returns(Task.FromResult(true));
+            userManager.Setup(g => g.IsInRoleAsync(user, "Manager")).Returns(Task.FromResult(true));
 
             encrypter.Setup(d => d.Decrypt("kaloyan@abv.bg")).Returns("kaloyan@abv.bg");
             encrypter.Setup(d => d.Decrypt("test text")).Returns("test text");
 
             using (var arrangeContex = new TBIContext(options))
             {
-
                 arrangeContex.Applications.Add(email);
-
                 await arrangeContex.SaveChangesAsync();
             }
             using (var assertContext = new TBIContext(options))
@@ -74,9 +72,82 @@ namespace TBIProject.Tests
                 Assert.AreEqual(true, executionResult.AllowedToWork);
                 Assert.AreEqual(date.Ticks.ToString(), executionResult.CurrentDataStamp);
             }
+        }
+
+        [TestMethod]
+        public async Task ValidateEmailTimeStampShouldReturnFalse()
+        {
+            var options = new DbContextOptionsBuilder<TBIContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null, null, null, null, null, null);
+
+            var encrypter = new Mock<IEncrypter>();
+            var validator = new Mock<IValidator>();
+            var emailService = new Mock<IEmailService>().Object;
+
+            var date = DateTime.Now;
+            var email = new Application
+            {
+                Id = 1,
+                Received = date,
+                Email = "kaloyan@abv.bg",
+                ApplicationStatus = ApplicationStatus.NotReviewed,
+                Body = "test text",
+                OperatorId = "1",
+                LastChange = date
+            };
+                   
+
+            using (var arrangeContex = new TBIContext(options))
+            {
+                arrangeContex.Applications.Add(email);
+                await arrangeContex.SaveChangesAsync();
+            }
+            using (var assertContext = new TBIContext(options))
+            {
+                var sut = new EmailProcessingService(assertContext, encrypter.Object, userManager.Object, validator.Object, emailService);
+                var executionResult = await sut.ValidateEmailTimeStamp(1, "1");
+                Assert.AreEqual(false, executionResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task ValidateEmailTimeStampShouldReturnTrue()
+        {
+            var options = new DbContextOptionsBuilder<TBIContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+
+            var userStore = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(userStore.Object, null, null, null, null, null, null, null, null);
+
+            var encrypter = new Mock<IEncrypter>();
+            var validator = new Mock<IValidator>();
+            var emailService = new Mock<IEmailService>().Object;
+
+            var date = DateTime.Now;
+            var email = new Application
+            {
+                Id = 1,
+                Received = date,
+                Email = "kaloyan@abv.bg",
+                ApplicationStatus = ApplicationStatus.NotReviewed,
+                Body = "test text",
+                OperatorId = "1",
+                LastChange = date
+            };
 
 
-
+            using (var arrangeContex = new TBIContext(options))
+            {
+                arrangeContex.Applications.Add(email);
+                await arrangeContex.SaveChangesAsync();
+            }
+            using (var assertContext = new TBIContext(options))
+            {
+                var sut = new EmailProcessingService(assertContext, encrypter.Object, userManager.Object, validator.Object, emailService);
+                var executionResult = await sut.ValidateEmailTimeStamp(1, date.Ticks.ToString());
+                Assert.AreEqual(true, executionResult);
+            }
         }
     }
 }
