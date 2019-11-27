@@ -53,7 +53,15 @@ namespace TBIProject.Controllers
                 {
                     return View(model);
                 }
-                
+
+                var role = await this.roleManager.FindByIdAsync(model.RoleId);
+
+                var success = await this.userManager.AddToRoleAsync(user, role.Name);
+
+                if (!success.Succeeded)
+                {
+                    return View(model);
+                }
             }
 
             return RedirectToAction("Index", "Home");

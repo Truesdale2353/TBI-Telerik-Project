@@ -20,7 +20,7 @@
                     <h5 class="">Sent by:@Model.EmailSender</h5>
                 </div>
                 <div class="card-subtitle" style="display: inline-flex; color:rgb(150, 146, 146)">
-                    <p>Operator Id:@Model.OperatorId</p><br />
+                    <p>Operator Id: @(@Model.OperatorId == null ? "No operator has been assigned to this email" : Model.OperatorId)</p><br />
                 </div>
                 <div class="card-columns" style="color:rgb(150, 146, 146)">
                     <p>Current status <b>@Model.EmailStatus</b> </p>

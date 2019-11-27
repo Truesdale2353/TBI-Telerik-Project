@@ -4,8 +4,6 @@
     let egn = $("#EGN").val();
     let phoneNumber = $("#phone").val()
     if (egn != undefined && phoneNumber != undefined) {
-
-
         let d = checkEgn(egn);
         if (!(/^((359)|(\+359)|(0)){1}[\d]{9,11}$/.test(phoneNumber))) {
             document.getElementById("phoneAlert").innerHTML = "Invalid phone number";
